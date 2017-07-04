@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 
 <head>
-    <title>Cogs</title>
+    <title>Lazy B Weather Informatics</title>
     <link href='https://spoqa.github.io/spoqa-han-sans/css/SpoqaHanSans-jp.css' rel='stylesheet' type='text/css'>
 
     <style type="text/css">
@@ -12,7 +12,6 @@
         
         body {
             background-color: #222;
-            color: #fff;
             overflow: hidden;
             margin: 0;
             padding: 0;
@@ -78,14 +77,19 @@
 </head>
 
 <body>
-    <script type="text/javascript" src="./particle.min.js"></script>
-    <script type="text/javascript" src="./index.js"></script>
-    <h1>Michael A. Bartlett</h1>
-    <p>About Blog Contact</p>
-    <?php
-    $output = exec("node -v");
-    echo $output;
-    ?>
+    <div class="contentCentered">
+        <div>
+            <h1>This site is under construction.</h1>
+            <p>
+	    <?php
+	    $node=shell_exec('node -v');
+	    $npm=shell_exec('npm -v');
+	    echo "Using node " . $node;
+	    echo "Using npm " . $npm;
+   	    ?>
+	    </p>
+        </div>
+    </div>
 </body>
 
 </html>
