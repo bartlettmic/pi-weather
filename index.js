@@ -2,18 +2,17 @@ const fs = require('fs');
 const RaspiCam = require("raspicam");
 const Particle = require('particle-api-js');
 const particle = new Particle();
-const token = 'ab3e0bb7c384847246e3c8276afa54adbf5971f4';
-const ID = '3b0035000247353137323334';
+const config = require('./config.json');
 
 var schedule = require('node-schedule');
 schedule.scheduleJob('*/5 * * * *', function() {
     var camera = new RaspiCam({ mode: "photo", output: "/var/www/html/snapshot.png", w: 960, h: 540, e: "png", timeout: 4 });
     camera.start();
-    camera.on("read", function(err, filename) { setTimeout(camera.stop(), camera.get("timeout") * 2) });
+    camera.on("read", function(err, filename) { setTimeout(camera.stop(), camera.get("timeout") * 2000) });
 
     setTimeout(function() { camera.stop() }, camera.get("timeout") * 2);
 
-    particle.getDevice({ deviceId: ID, auth: token }).then(function(data) {
+    particle.getDevice({ deviceId: config.ID, auth: config.token }).then(function(data) {
             var promises = [];
             for (var v of Object.getOwnPropertyNames(data.body.variables)) promises.push(particle.getVariable({ deviceId: ID, name: v, auth: token }));
             Promise.all(promises).then(values => {

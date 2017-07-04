@@ -1,6 +1,7 @@
 #pictures taken
 *.jpg
 *.png
+config.json
 
 # Logs
 logs
