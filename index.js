@@ -15,6 +15,7 @@ devicesPr.then(function(data) {
         for (var v of vars) promises.push(particle.getVariable({ deviceId: ID, name: v, auth: token }));
         Promise.all(promises).then(values => {
             for (var v of values) output[v.body.name] = v.body.result;
+            output[timestamp] = new Date().toLocaleString();
             fs.writeFileSync('weather.json', JSON.stringify(output), 'utf8');
         });
     },
