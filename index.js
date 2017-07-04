@@ -9,6 +9,10 @@ const ID = '3b0035000247353137323334';
 // var j = schedule.scheduleJob('*/5 * * * *', function() {
 var camera = new RaspiCam({ mode: "photo", output: "/var/www/html/snapshot.png", w: 960, h: 540, e: "png", timeout: 4 });
 camera.start();
+camera.on("started", function() { console.log("DICKS") });
+camera.on("read", function(err, filename) { console.log("DICKS") });
+camera.on("exited", function() { console.log("DICKS") });
+
 setTimeout(function() { camera.stop() }, camera.get("timeout"));
 
 particle.getDevice({ deviceId: ID, auth: token }).then(function(data) {
