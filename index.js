@@ -7,11 +7,14 @@ const ID = '3b0035000247353137323334';
 
 // var schedule = require('node-schedule');
 // var j = schedule.scheduleJob('*/5 * * * *', function() {
-var camera = new RaspiCam({ mode: "photo", output: "./snapshot.png", w: 1920, h: 1080, e: "png" });
+var camera = new RaspiCam({ mode: "photo", output: "./snapshot.png", w: 1920, h: 1080, e: "png", t: "1s" });
 camera.start();
-// camera.stop();
+camera.stop();
 camera.on("started", function() { console.log("Taking picture"); });
-camera.on("exited", function() { console.log("Closed camera"); camera.stop(); });
+camera.on("exited", function() {
+    console.log("Closed camera");
+    camera.stop();
+});
 
 particle.getDevice({ deviceId: ID, auth: token }).then(function(data) {
         var promises = [];
