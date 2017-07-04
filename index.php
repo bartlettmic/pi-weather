@@ -85,7 +85,9 @@
    	    ?>
         <span></span>
         <script>
-        setInterval(function() { $.getJSON("weather.json", function(json) { document.getElementsByTagName("SPAN")[0].innerHTML = JSON.stringify(json); }); }, 60000);
+        // setInterval(function() { 
+            $.getJSON("./weather.json", function(json) { document.getElementsByTagName("SPAN")[0].innerHTML = JSON.stringify(json); }); 
+        // }, 60000);
         </script>   
 	    </p>
         </div>
