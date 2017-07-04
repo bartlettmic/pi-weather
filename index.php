@@ -84,8 +84,11 @@
         <script>
         // setInterval(function() { 
             var weather;
-            $.getJSON("./weather.json", function(json) { weather = JSON.parse(JSON.stringify(json)); }); 
-            console.log(weather)
+            $.getJSON("./weather.json", function(json) { weather = JSON.parse(JSON.stringify(json)); }).done(function() {
+                console.log( weather );
+            }).fail(function() {
+                console.log( "Could not load weather data from server.");
+            });
         // }, 60000);
         </script>   
         </div>
