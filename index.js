@@ -5,19 +5,17 @@ const token = 'ab3e0bb7c384847246e3c8276afa54adbf5971f4';
 const ID = '3b0035000247353137323334';
 
 // var schedule = require('node-schedule');
-// var j = schedule.scheduleJob('0 * * * * *', function() {
-var output = {};
-
-var devicesPr = particle.getDevice({ deviceId: ID, auth: token });
-devicesPr.then(function(data) {
-        var vars = Object.getOwnPropertyNames(data.body.variables);
+// var j = schedule.scheduleJob('*/5 * * * *', function() {
+particle.getDevice({ deviceId: ID, auth: token }).then(function(data) {
         var promises = [];
-        for (var v of vars) promises.push(particle.getVariable({ deviceId: ID, name: v, auth: token }));
+        for (var v of Object.getOwnPropertyNames(data.body.variables)) promises.push(particle.getVariable({ deviceId: ID, name: v, auth: token }));
         Promise.all(promises).then(values => {
+            var output = {};
             for (var v of values) output[v.body.name] = v.body.result;
             output.timestamp = new Date().toLocaleString();
             fs.writeFileSync('weather.json', JSON.stringify(output), 'utf8');
-        }).catch(function(err) {
+        })
+        .catch(function(err) {
             console.log("Unable to resolve all promises."); // some coding error in handling happened
         });
     },
@@ -25,6 +23,4 @@ devicesPr.then(function(data) {
         console.log('API call failed.');
     }
 );
-
-
 // });
