@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/bartlettmic/pi-weather#readme",
   "dependencies": {
+    "node-schedule": "^1.2.3",
     "particle-api-js": "^6.5.0"
   }
 }

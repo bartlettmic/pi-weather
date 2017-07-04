@@ -82,7 +82,7 @@
             <h1>This site is under construction.</h1>
             <p>
 	    <?php
-	    $node=shell_exec('node -v');
+	    $node=shell_exec('node index.js');
 	    $npm=shell_exec('npm -v');
 	    echo "Using node " . $node;
 	    echo "Using npm " . $npm;

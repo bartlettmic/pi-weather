@@ -1,41 +1,26 @@
-var Particle = require('particle-api-js');
-var particle = new Particle();
-var token = 'ab3e0bb7c384847246e3c8276afa54adbf5971f4';
+const fs = require('fs');
+const Particle = require('particle-api-js');
+const particle = new Particle();
+const token = 'ab3e0bb7c384847246e3c8276afa54adbf5971f4';
+const ID = '3b0035000247353137323334';
 
-particle.login({
-    username: 'bobbybart62@gmail.com',
-    password: 'gibson#1'
-}).then(
+// var schedule = require('node-schedule');
+// var j = schedule.scheduleJob('0 * * * * *', function() {
+var output = {};
 
-    function(data) {
-        token = data.body.access_token;
+var devicesPr = particle.getDevice({ deviceId: ID, auth: token });
+devicesPr.then(function(data) {
+        var vars = Object.getOwnPropertyNames(data.body.variables);
+        var promises = [];
+        for (var v of vars) promises.push(particle.getVariable({ deviceId: ID, name: v, auth: token }));
+        Promise.all(promises).then(values => {
+            for (var v of values) output[v.body.name] = v.body.result;
+            fs.writeFileSync('weather.json', JSON.stringify(output), 'utf8');
+        });
     },
     function(err) {
-        console.log('Could not log in.', err);
+        console.log('API call failed.');
     }
 );
 
-var devicesPr = particle.listDevices({ auth: token }),
-    photid;
-
-token = 'ab3e0bb7c384847246e3c8276afa54adbf5971f4';
-
-devicesPr.then(
-
-    function(devices) {
-        photid = devices.body[0].id
-        console.log(devices.body[0]);
-    },
-    function(err) {
-        console.log('List devices call failed: ');
-    }
-);
-
-// get_wind_speed()
-token = 'ab3e0bb7c384847246e3c8276afa54adbf5971f4';
-
-particle.getVariable({ deviceId: '3b0035000247353137323334', name: 'soc', auth: token }).then(function(data) {
-    console.log('Device variable retrieved successfully:', data);
-}, function(err) {
-    console.log('An error occurred while getting attrs:', err);
-});
+// });
