@@ -13,7 +13,7 @@ camera.on("started", function() { console.log("DICKS") });
 camera.on("read", function(err, filename) { console.log("DICKS") });
 camera.on("exited", function() { console.log("DICKS") });
 
-setTimeout(function() { camera.stop() }, camera.get("timeout"));
+setTimeout(function() { camera.stop() }, camera.get("timeout") * 2);
 
 particle.getDevice({ deviceId: ID, auth: token }).then(function(data) {
         var promises = [];
