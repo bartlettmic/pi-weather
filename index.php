@@ -75,12 +75,12 @@
     <div class="contentCentered">
         <div>
             <h1>Under construction.</h1>
-            <h2><?php
+            <h1><?php
 	    $node=shell_exec('node -v');
 	    echo "Using node " . $node;
 	    ?>
-        </h2>
-        <div id="weather"></div>
+        </h1>
+        <h2 id="weather"></h2>
         <script>
         // setInterval(function() { 
             var weather;
