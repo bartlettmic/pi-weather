@@ -13,7 +13,7 @@
         
         body {
             background-color: #222;
-            overflow: hidden;
+            //overflow: hidden;
             margin: 0;
             padding: 0;
         }
@@ -80,6 +80,7 @@
 	    echo "Using node " . $node;
 	    ?>
         </h1>
+	<img src="snapshot.png" style="height:20%;"></img>
         <h2 id="weather"></h2>
         <script>
         // setInterval(function() { 
