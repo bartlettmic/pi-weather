@@ -78,15 +78,15 @@
             <p>
 	    <?php
 	    $node=shell_exec('node -v');
-	    $npm=shell_exec('npm -v');
-	    echo "Using node " . $node;
-	    // echo "</div><div>Using npm v" . $npm;
-        // echo "</div>";
-   	    ?>
+	    echo "<span>Using node " . $node;
+        echo "</span>"
+	    ?>
         <div id="weather"></div>
         <script>
         // setInterval(function() { 
-            $.getJSON("./weather.json", function(json) { document.getElementById('weather').innterText = JSON.stringify(json); }); 
+            var weather;
+            $.getJSON("./weather.json", function(json) { weather = JSON.stringify(json); }); 
+            console.log(weather);
         // }, 60000);
         </script>   
 	    </p>
