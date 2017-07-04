@@ -79,13 +79,13 @@
 <body>
     <div class="contentCentered">
         <div>
-            <h1>This site is under construction.</h1>
+            <h1>Under construction.</h1>
             <p>
 	    <?php
-	    $node=shell_exec('node index.js');
+	    $node=shell_exec('node -v');
 	    $npm=shell_exec('npm -v');
 	    echo "Using node " . $node;
-	    echo "Using npm " . $npm;
+	    echo "Using npm v" . $npm;
    	    ?>
 	    </p>
         </div>
