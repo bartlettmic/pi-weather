@@ -85,7 +85,7 @@
         // setInterval(function() { 
             var weather;
             $.getJSON("./weather.json", function(json) { weather = JSON.stringify(json); }).done(function() {
-                $('#weather').innerHTML = weather;
+                document.getElementById("WEATHER").innerHTML = weather;
             }).fail(function() {
                 console.log( "Could not load weather data from server.");
             });
