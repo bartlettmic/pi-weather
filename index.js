@@ -22,5 +22,4 @@ devicesPr.then(function(data) {
         console.log('API call failed.');
     }
 );
-
 // });
