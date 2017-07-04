@@ -86,7 +86,7 @@
         <div id="weather"></div>
         <script>
         // setInterval(function() { 
-            $.getJSON("./weather.json", function(json) { document.getElementsById('weather').innterText = JSON.stringify(json); }); 
+            $.getJSON("./weather.json", function(json) { document.getElementById('weather').innterText = JSON.stringify(json); }); 
         // }, 60000);
         </script>   
 	    </p>
