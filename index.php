@@ -74,8 +74,8 @@
 <body>
     <div class="contentCentered">
         <div>
-            <h1>Under construction.</h1>
-            <h1><?php
+            <h1>Under construction.<br/>
+            <?php
 	    $node=shell_exec('node -v');
 	    echo "Using node " . $node;
 	    ?>
