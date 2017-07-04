@@ -84,7 +84,8 @@
         <script>
         // setInterval(function() { 
             var weather;
-            $.getJSON("./weather.json", function(json) { weather = JSON.parse(JSON.stringify(json)); console.log(weather) }); 
+            $.getJSON("./weather.json", function(json) { weather = JSON.parse(JSON.stringify(json)); }); 
+            console.log(weather)
         // }, 60000);
         </script>   
         </div>
