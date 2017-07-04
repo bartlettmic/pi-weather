@@ -10,9 +10,11 @@ In hindsight I should have used a node.js server backend, but I went with a LAMP
 * Place this repo in `/var/www/html` once you have confirmed you can connect to your pi and get the apache default page.
 * Install node & npm
     * Pi is arm so usual method won't work, follow [this guide](http://weworkweplay.com/play/raspberry-pi-nodejs/)
-    * Gist of article: ```wget http://node-arm.herokuapp.com/node_latest_armhf.deb 
-
-sudo dpkg -i node_latest_armhf.deb```
+    * Gist of article: 
+```
+wget http://node-arm.herokuapp.com/node_latest_armhf.deb 
+sudo dpkg -i node_latest_armhf.deb
+```
 * Run `npm install` in `/var/www/html`
 * IN THE FUTURE accessing the page should be enough to kick-start all the periodic updates. For right now, you must run `node index.js` to update anything on the page.
 * Todo:
