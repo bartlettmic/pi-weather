@@ -11,7 +11,7 @@ var camera = new RaspiCam({ mode: "photo", output: "./snapshot.png", w: 1920, h:
 camera.start();
 // camera.stop();
 camera.on("started", function() { console.log("Taking picture"); });
-camera.on("exited", function() { consolg.log("Closed camera"); });
+camera.on("exited", function() { console.log("Closed camera"); camera.stop(); });
 
 particle.getDevice({ deviceId: ID, auth: token }).then(function(data) {
         var promises = [];
