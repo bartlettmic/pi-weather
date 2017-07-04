@@ -8,8 +8,8 @@ const ID = '3b0035000247353137323334';
 // var schedule = require('node-schedule');
 // var j = schedule.scheduleJob('*/5 * * * *', function() {
 var camera = new RaspiCam({ mode: "photo", output: "/var/www/html/snapshot.png", w: 960, h: 540, e: "png", timeout: 4 });
-setTimeout(function() { camera.start() }, 4000);
-// camera.on("exited", function() { camera.stop(); });
+camera.start();
+setTimeout(camera.stop(), camera.get("timeout"));
 
 particle.getDevice({ deviceId: ID, auth: token }).then(function(data) {
         var promises = [];
