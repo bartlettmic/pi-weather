@@ -37,7 +37,7 @@
             display: inline-table;
             vertical-align: middle;
             /*border-radius: 10%;*/
-            width: 25vw;
+            width: 50%;
             height: 5vh;
             color: #fff;
             /*font-family: 'fonty';*/
@@ -67,13 +67,7 @@
             content: "";
             display: inline-table;
             width: 100%;
-            /*align-items: stretch;*/
         }
-        /*        
-        @font-face {
-            font-family: 'fonty';
-            src: url('./font.ttf');
-        }*/
     </style>
 </head>
 
@@ -91,7 +85,7 @@
    	    ?>
         <span></span>
         <script>
-        setInterval(function() { $.getJSON("weather.json", function(json) { $('span').innerHTML = JSON.stringify(json); }); }, 60000);
+        setInterval(function() { $.getJSON("weather.json", function(json) { document.getElementsByTagName("SPAN")[0].innerHTML = JSON.stringify(json); }); }, 60000);
         </script>   
 	    </p>
         </div>

@@ -4,8 +4,6 @@ const particle = new Particle();
 const token = 'ab3e0bb7c384847246e3c8276afa54adbf5971f4';
 const ID = '3b0035000247353137323334';
 
-//Gonna have to BROWSERIFY MY NIGGA AHAHAHAH
-
 // var schedule = require('node-schedule');
 // var j = schedule.scheduleJob('0 * * * * *', function() {
 var output = {};
