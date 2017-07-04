@@ -1,0 +1,22 @@
+{
+  "name": "pi-weather",
+  "version": "1.0.0",
+  "description": "Pull data from local weather station",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bartlettmic/pi-weather.git"
+  },
+  "author": "Michael Bartlett",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/bartlettmic/pi-weather/issues"
+  },
+  "homepage": "https://github.com/bartlettmic/pi-weather#readme",
+  "dependencies": {
+    "particle-api-js": "^6.5.0"
+  }
+}
