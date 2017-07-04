@@ -84,8 +84,8 @@
 	    <?php
 	    $node=shell_exec('node -v');
 	    $npm=shell_exec('npm -v');
-	    echo "Using node " . $node;
-	    echo "Using npm v" . $npm;
+	    echo "<br/>Using node " . $node;
+	    echo "<br/>Using npm v" . $npm;
    	    ?>
 	    </p>
         </div>
