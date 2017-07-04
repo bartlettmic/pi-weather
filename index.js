@@ -15,12 +15,16 @@ devicesPr.then(function(data) {
         for (var v of vars) promises.push(particle.getVariable({ deviceId: ID, name: v, auth: token }));
         Promise.all(promises).then(values => {
             for (var v of values) output[v.body.name] = v.body.result;
-            output[timestamp] = new Date().toLocaleString();
+            output.timestamp = new Date().toLocaleString();
             fs.writeFileSync('weather.json', JSON.stringify(output), 'utf8');
+        }).catch(function(err) {
+            console.log("Unable to resolve all promises."); // some coding error in handling happened
         });
     },
     function(err) {
         console.log('API call failed.');
     }
 );
+
+
 // });
