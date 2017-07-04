@@ -3,6 +3,7 @@
 <head>
     <title>Lazy B Weather Informatics</title>
     <link href='https://spoqa.github.io/spoqa-han-sans/css/SpoqaHanSans-jp.css' rel='stylesheet' type='text/css'>
+    <script src="jquery.min.js"></script>
 
     <style type="text/css">
         * {
@@ -84,9 +85,14 @@
 	    <?php
 	    $node=shell_exec('node -v');
 	    $npm=shell_exec('npm -v');
-	    echo "<br/>Using node " . $node;
-	    echo "<br/>Using npm v" . $npm;
+	    echo "<div>Using node " . $node;
+	    echo "</div><div>Using npm v" . $npm;
+        echo "</div>";
    	    ?>
+        <span></span>
+        <script>
+        setInterval(function() { $.getJSON("weather.json", function(json) { $('span').innerHTML = JSON.stringify(json); }); }, 60000);
+        </script>   
 	    </p>
         </div>
     </div>

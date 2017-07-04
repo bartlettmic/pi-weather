@@ -1,11 +1,1 @@
-{
-	"humidity": 43.3316650390625,
-	"tempf": 56.54876708984375,
-	"pascals": 740.7550048828125,
-	"barotemp": 57.20000076293945,
-	"voltage": 4.34375,
-	"soc": 119.96484375,
-	"alert": false,
-	"windir": "SW",
-	"winspd": 0
-}
+{"humidity":28.01947021484375,"tempf":67.35000610351562,"pascals":740.469970703125,"barotemp":67.88749694824219,"voltage":4.34499979019165,"soc":119.96484375,"alert":false,"windir":"SW","winspd":0}
