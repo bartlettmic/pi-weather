@@ -12,7 +12,7 @@ camera.on("read", function(err, filename) {
     setTimeout(function() {
         camera.stop();
         console.log("exitting...");
-    }, camera.get("timeout") * 2)
+    }, camera.get("timeout"))
 });
 
 particle.getDevice({ deviceId: config.ID, auth: config.token }).then(function(data) {
