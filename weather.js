@@ -14,6 +14,9 @@ camera.on("read", function(err, filename) {
         console.log("exitting...");
     }, camera.get("timeout"))
 });
+console.log(config);
+console.log(config.ID);
+console.log(config.config);
 
 particle.getDevice({ deviceId: config.ID, auth: config.token }).then(function(data) {
         var promises = [];
