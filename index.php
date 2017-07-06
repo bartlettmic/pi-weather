@@ -79,6 +79,11 @@
 	    $node=shell_exec('node -v');
 	    echo "Using node " . $node;
 	    ?>
+	    <?php
+	    $filename = "snapshot.png";
+	    $md5file = md5_file($filename);
+	    echo $md5file;
+	    ?>
         </h1>
 	<img src="snapshot.png" style="height:20%;"></img>
         <h2 id="weather"></h2>
