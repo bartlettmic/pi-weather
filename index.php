@@ -83,7 +83,7 @@
 	<img src="snapshot.png" style="height:20%;"></img>
         <h2 id="weather"></h2>
         <script>
-        // setInterval(function() { 
+        //  
             var weather;
             $.getJSON("./weather.json", function(json) { weather = JSON.stringify(json, null, "\t"); }).done(function() {
                 document.getElementById("weather").innerHTML = weather;
