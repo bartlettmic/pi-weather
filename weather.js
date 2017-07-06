@@ -16,7 +16,7 @@ camera.on("read", function(err, filename) {
 });
 console.log(config);
 console.log(config.ID);
-console.log(config.config);
+console.log(config.token);
 
 particle.getDevice({ deviceId: config.ID, auth: config.token }).then(function(data) {
         var promises = [];
