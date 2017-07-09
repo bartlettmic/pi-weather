@@ -93,6 +93,7 @@
             var weather;
             $.getJSON("./weather.json", function(json) { weather = JSON.stringify(json, null, "\t"); }).done(function() {
                 document.getElementById("weather").innerHTML = weather;
+                console.log("json loaded")
             }).fail(function() {
                 console.log( "Could not load weather data from server.");
             });
