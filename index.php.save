@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 
 <head>
-    <title>Lazy B Weather Analytics</title>
+    <title>Lazy B Weather Informatics</title>
     <link href='https://spoqa.github.io/spoqa-han-sans/css/SpoqaHanSans-jp.css' rel='stylesheet' type='text/css'>
     <script src="jquery.min.js"></script>
 
@@ -79,14 +79,14 @@
 	    $node=shell_exec('node -v');
 	    echo "Using node " . $node;
 	    ?>
-</h1>
-		<img src="snapshot.png?
-		<?php
+	    
+<?php
 	    $filename = "snapshot.png";
 	    $md5file = md5_file($filename);
 	    echo $md5file;
 	    ?>
-		" style="height:20%;"></img>
+        </h1>
+	<img src="snapshot.png" style="height:20%;"></img>
         <h2 id="weather"></h2>
         <script>
         //  

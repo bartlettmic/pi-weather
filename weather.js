@@ -15,17 +15,16 @@ camera.on("read", function(err, filename) {
     }, camera.get("timeout"))
 });
 console.log(config);
-console.log(config.ID);
-console.log(config.token);
 
 particle.getDevice({ deviceId: config.ID, auth: config.token }).then(function(data) {
         var promises = [];
-        for (var v of Object.getOwnPropertyNames(data.body.variables)) promises.push(particle.getVariable({ deviceId: ID, name: v, auth: token }));
+        for (var v of Object.getOwnPropertyNames(data.body.variables)) promises.push(particle.getVariable({ deviceId: config.ID, name: v, auth: config.token }));
         Promise.all(promises).then(values => {
             var output = {};
             for (var v of values) output[v.body.name] = v.body.result;
             output.timestamp = new Date().toLocaleString();
             fs.writeFileSync('weather.json', JSON.stringify(output), 'utf8');
+	    console.log("Current weater recorded.");
         })
         .catch(function(err) {
             console.log("Unable to resolve all promises."); // some coding error in handling happened
