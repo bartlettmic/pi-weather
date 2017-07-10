@@ -6,6 +6,7 @@ const config = require('./config.json');
 
 //var schedule = require('node-schedule');
 //schedule.scheduleJob('*/5 * * * *', function() {
+/*
 var camera = new RaspiCam({ mode: "photo", output: "/var/www/html/snapshot.png", w: 960, h: 540, e: "png", timeout: 2000 });
 camera.start();
 camera.on("read", function(err, filename) {
@@ -15,17 +16,17 @@ camera.on("read", function(err, filename) {
     }, camera.get("timeout"))
 });
 console.log(config);
-
+*/
 
 particle.getDevice({ deviceId: config.ID, auth: config.token }).then(function(data) {
         var promises = [];
-        console.log(data.body.variables);
         for (var v of Object.getOwnPropertyNames(data.body.variables)) {
             promises.push(
                 particle.getVariable({ deviceId: config.ID, name: v, auth: config.token })
-                .then(function(data) {
-                    if (data) console.log(data.body.name)
-                }, function(err) { console.log(err) })
+//                .then(function(data) {
+//                    if (data) console.log(data.body.name)
+//		    else { console.log("dicks") }
+//                }, function(err) { console.log(err) })
             );
         }
         Promise.all(promises).then(values => {
