@@ -19,12 +19,12 @@ console.log(config);
 
 particle.getDevice({ deviceId: config.ID, auth: config.token }).then(function(data) {
         var promises = [];
-	//console.log(data.body.variables);
+        console.log(data.body.variables);
         for (var v of Object.getOwnPropertyNames(data.body.variables)) {
             promises.push(
                 particle.getVariable({ deviceId: config.ID, name: v, auth: config.token })
                 .then(function(data) {
-                     if (data) console.log(data.body.name)
+                    if (data) console.log(data.body.name)
                 }, function(err) { console.log(err) })
             );
         }
