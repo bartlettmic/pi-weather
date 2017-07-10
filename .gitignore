@@ -3,6 +3,7 @@
 *.png
 config.json
 weather.json
+*.save
 
 # Logs
 logs
