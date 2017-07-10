@@ -2,6 +2,7 @@
 *.jpg
 *.png
 config.json
+weather.json
 
 # Logs
 logs
