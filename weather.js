@@ -22,8 +22,8 @@ particle.getDevice({ deviceId: config.ID, auth: config.token }).then(function(da
         for (var v of Object.getOwnPropertyNames(data.body.variables)) {
             promises.push(
                 particle.getVariable({ deviceId: config.ID, name: v, auth: config.token })
-                .then(console.log(data.body))
-            );
+                .then(function(data) { console.log(data) }, function(err) { console.log(err) })
+                );
         }
         Promise.all(promises).then(values => {
             var output = {};
