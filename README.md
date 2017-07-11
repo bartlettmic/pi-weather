@@ -1,5 +1,6 @@
 # pi-weather
 Repo to easily modify front-end of raspberry-pi local weather informatics server
+[Consider using flask or express in the future ya dingus](http://www.raspberrypi-spy.co.uk/2017/07/create-a-basic-python-web-server-with-flask/)
 
 ## How to replicate:
 In hindsight I should have used a node.js server backend, but I went with a LAMP model because it was the first good result on google.
