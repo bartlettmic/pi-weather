@@ -1,5 +1,6 @@
 # pi-weather
-Repo to easily modify front-end of raspberry-pi local weather informatics server
+Repo to easily modify front-end of raspberry-pi local weather visualization, forecast (eventually), *and* analytics server. Mathematical! (*maybe*)
+
 [Consider using flask or express in the future ya dingus](http://www.raspberrypi-spy.co.uk/2017/07/create-a-basic-python-web-server-with-flask/)
 
 ## How to replicate:
