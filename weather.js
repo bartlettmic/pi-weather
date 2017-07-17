@@ -33,7 +33,7 @@ particle.getDevice({ deviceId: config.ID, auth: config.token }).then(function(da
             var output = {};
             for (var v of values) output[v.body.name] = v.body.result;
             output.timestamp = new Date().toLocaleString();
-            fs.writeFileSync('weather.json', JSON.stringify(output,"\n"), 'utf8');
+            fs.writeFileSync('weather.json', JSON.stringify(output,null,"\t"), 'utf8');
             console.log("Current weather recorded.");
         })
         .catch(function(err) {
@@ -43,6 +43,7 @@ particle.getDevice({ deviceId: config.ID, auth: config.token }).then(function(da
     },
     function(err) {
         console.log('API call failed.');
+        console.log(err);
     }
 );
 //});
