@@ -7,7 +7,7 @@ const config = require('./config.json');
 //var schedule = require('node-schedule');
 //schedule.scheduleJob('*/5 * * * *', function() {
 
-var camera = new RaspiCam({ mode: "photo", output: "/var/www/html/snapshot.png", w: 960, h: 540, e: "png", timeout: 2000 });
+var camera = new RaspiCam({ mode: "photo", output: "/home/pi/pi-weather/snapshot.png", w: 960, h: 540, e: "png", timeout: 2000 });
 camera.start();
 camera.on("read", function(err, filename) {
     setTimeout(function() {
