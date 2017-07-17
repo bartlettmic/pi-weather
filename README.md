@@ -25,13 +25,18 @@ Repo to easily modify front-end of raspberry-pi local weather visualization, for
 wget http://node-arm.herokuapp.com/node_latest_armhf.deb 
 sudo dpkg -i node_latest_armhf.deb
 rm node_latest_armhf.deb
-npm install # this will install all dependencies listed in package.json &mdash; namely express, pug, particle-api, node scheduler, raspicam node api
+npm install # this will install all dependencies listed in package.json -
+            # namely express, pug, particle-api, node scheduler, raspicam node api
 
-# Assuming you don't want to run sudo everytime you launch the server, you'll likely need to redirect a provisional port to port 80 so you can just type in the IP without specifying a port
+# Assuming you don't want to run sudo everytime you launch the server, you'll likely
+#   need to redirect a provisional port to port 80 so you can just type in the IP without 
+#   specifying a port.
 iptables -t nat -I PREROUTING -p tcp --dport 80 -j REDIRECT --to-port 3000
-#   This routes port 3000 to port 80. You'll still need to port-forward to access your server remotely, but otherwise everything in this repo *should* work as it's written for port 3000.
+#   This routes port 3000 to port 80. You'll still need to port-forward to access your
+#   server remotely, but otherwise everything in this repo *should* work as it's written 
+#   for port 3000.
 
-npm run watch # to run the server but automatically restart itself if a file is changed in the directory
+npm run watch # to run the server but auto-restart if any file is modified.
 
 # OR
 
