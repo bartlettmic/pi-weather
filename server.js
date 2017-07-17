@@ -3,8 +3,10 @@ app.set('views', './');
 app.set('view engine', 'pug');
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
+
+var _port = 3000;
  
-app.listen(8000, function () { console.log('Listening on http://localhost:8080'); });
+app.listen(_port, function () { console.log('Listening on '+_port); });
 
 app.get('/', function (req, res) { res.render('index', { title: 'Hey', message: 'Hello there!' }); });
 
