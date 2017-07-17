@@ -17,33 +17,30 @@ camera.on("read", function(err, filename) {
 });
 //console.log(config);
 
-
-particle.getDevice({ deviceId: config.ID, auth: config.token }).then(function(data) {
-        var promises = [];
-        for (var v of Object.getOwnPropertyNames(data.body.variables)) {
-            promises.push(
-                particle.getVariable({ deviceId: config.ID, name: v, auth: config.token })
-//                .then(function(data) {
-//                    if (data) console.log(data.body.name)
-//		    else { console.log("dicks") }
-//                }, function(err) { console.log(err) })
-            );
-        }
-        Promise.all(promises).then(values => {
-            var output = {};
-            for (var v of values) output[v.body.name] = v.body.result;
-            output.timestamp = new Date().toLocaleString();
-            fs.writeFileSync('weather.json', JSON.stringify(output,null,"\t"), 'utf8');
-            console.log("Current weather recorded.");
-        })
-        .catch(function(err) {
-            console.log("Unable to resolve all promises."); // some coding error in handling happened
-            console.log(err);
-        });
-    },
-    function(err) {
-        console.log('API call failed.');
-        console.log(err);
-    }
-);
+particle.callFunction({ deviceId: config.ID, name: 'update', argument: '', auth: config.token })
+    .then(function(data) {
+        console.log('Station updated, pulling sensor data...');
+        particle.getDevice({ deviceId: config.ID, auth: config.token }).then(
+            function(data) {
+                var promises = [];
+                for (var v of Object.getOwnPropertyNames(data.body.variables)) {
+                    promises.push(particle.getVariable({ deviceId: config.ID, name: v, auth: config.token })
+                        .then(function(data) {
+                                process.stdout.write(data.body.name + " ")
+                                return data;
+                            },
+                            function(err) { console.log(err) })
+                    )}
+                Promise.all(promises).then(values => {
+                        var output = {};
+                        for (var v of values) output[v.body.name] = v.body.result;
+                        output.timestamp = new Date().toLocaleString();
+                        fs.writeFileSync('weather.json', JSON.stringify(output, null, "\t"), 'utf8');
+                        console.log("\nCurrent sensor values recorded.");
+                    })
+                    .catch(function(err) {
+                        console.log("Unable to resolve all promises.", err);
+                    })
+            }, function(err) { console.log('Device call failed.', err); });
+    }, function(err) { console.log('Unable to update station.', err); });
 //});
