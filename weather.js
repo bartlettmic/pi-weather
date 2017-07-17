@@ -6,16 +6,18 @@ const config = require('./config.json');
 
 //var schedule = require('node-schedule');
 //schedule.scheduleJob('*/5 * * * *', function() {
-
-var camera = new RaspiCam({ mode: "photo", output: "/home/pi/pi-weather/snapshot.png", w: 960, h: 540, e: "png", timeout: 2000 });
-camera.start();
-camera.on("read", function(err, filename) {
-    setTimeout(function() {
-        camera.stop();
-        console.log("exitting...");
-    }, camera.get("timeout"))
-});
 //console.log(config);
+
+try {
+    var camera = new RaspiCam({ mode: "photo", output: "/home/pi/pi-weather/snapshot.png", w: 960, h: 540, e: "png", timeout: 2000 });
+    camera.start();
+    camera.on("read", function(err, filename) {
+        setTimeout(function() {
+            camera.stop();
+            console.log("exitting...");
+        }, camera.get("timeout"))
+    });
+} catch (err) { console.log("Unable to access Pi Camera module.") };
 
 particle.callFunction({ deviceId: config.ID, name: 'update', argument: '', auth: config.token })
     .then(function(data) {
