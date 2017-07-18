@@ -1,5 +1,79 @@
 html
     head
-        title= title
+        title Lazy B Weather Analytics
+        <link href='https://spoqa.github.io/spoqa-han-sans/css/SpoqaHanSans-jp.css' rel='stylesheet' type='text/css'>
+        script(src="jquery.min.js")
+        style.
+            * {
+                font-family: 'Spoqa Han Sans', 'Spoqa Han Sans JP', 'Sans-serif';
+                font-weight: 200;
+                color: #ccc;
+            }
+
+            body {
+                background-color: #222;
+                /* overflow: hidden; */
+                margin: 0;
+                padding: 0;
+                max-height: 100%;
+            }
+            
+            .center {
+                top: 0;
+                width: 100%;
+                height: 100vh;
+                margin: auto;
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .cols {
+                display: flex;
+                flex-direction: row;
+                text-align: justify;
+                justify-content: space-around;
+                align-content: space-around;
+                margin: auto;
+                white-space: nowrap;
+                font-size: 2.5vmin;
+                max-height: 75vh;
+                min-width: 100vw;
+            }
+            
+            .fit-cover {
+                width: 100vmin;
+                max-width: 100vmin;
+                object-fit: scale-down; /*magic*/
+                margin: auto;
+            }
+            
+            h1 { 
+                font-size: 5vmin; 
+                padding: 0;
+                margin: 0;
+            }
+            
+
     body
-        h1= message
+
+        div(class="center")
+            div
+                h1 Under construction.
+                - var _ver = process.version
+                h1="Using node " + _ver
+                div(class="cols")
+                    img(src="snapshot.png?" + new Date().getTime() class="fit-cover")
+                    h2(id="weather" style="margin: auto;")
+                script.
+                    var weather;
+                    $.getJSON("./weather.json", function(json) { 
+                        weather = JSON.stringify(json, null, "\t").replace(/\"/g, "").slice(3,-2).split(/,\n\t*/).slice(0,-1).join("<br/>")
+                        var _ts = (new Date(json.timestamp)).toLocaleString().split(", ");
+                        //- weather += "<br/>Last updated at " + _ts.getHours()+":"+_ts.getMinutes().toFixed(2)+":"+_ts.getSeconds()+" "+(_ts.getMonth()+1)+"/"+_ts.getDate()+"/"+_ts.getFullYear(); 
+                        weather += "<br/>Last updated at " + _ts[1] +", "+_ts[0];
+                        }).done(function() {
+                        document.getElementById("weather").innerHTML = weather;
+                        console.log("json loaded")
+                    }).fail(function() {
+                        console.log( "Could not load weather data from server.");
+                    });

@@ -33,7 +33,7 @@ try {
                     Promise.all(promises).then(values => {
                         var output = {};
                         for (var v of values) output[v.body.name] = v.body.result;
-                        output.timestamp = new Date().toLocaleString({timezone: null});
+                        output.timestamp = new Date().toLocaleString();
                         fs.writeFileSync('weather.json', JSON.stringify(output, null, "\t"), 'utf8');
                         console.log("\nCurrent sensor values recorded.");
                     }).catch(function(err) { console.log("Unable to resolve all promises.", err); })
