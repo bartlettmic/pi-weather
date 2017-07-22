@@ -4,8 +4,8 @@
   "description": "Pull data from local weather station",
   "main": "index.js",
   "scripts": {
-    "watch": "nodemon server.js -e js,pug",
-    "start": "node server.js"
+    "watch": "node weather.js && nodemon server.js -e js,pug",
+    "start": "node weather.js && node server.js"
   },
   "repository": {
     "type": "git",
