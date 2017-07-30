@@ -62,7 +62,9 @@ html
                 - var _ver = process.version
                 h1="Using node " + _ver
                 div(class="cols")
-                    img(src="snapshot.png?" + new Date().getTime() class="fit-cover")
+                    //- - var _md5 = fs.readFile('snapshot.png', function(err, buf) { (require('md5'))(buf) });
+                    //- - var _md5 = fs.readFileSync('snapshot.png', function(err, buf) { return md5(buf) });
+                    img(src="snapshot.png?" + _md5 class="fit-cover")
                     h2(id="weather" style="margin: auto;")
                 script.
                     var weather;

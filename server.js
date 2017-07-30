@@ -5,12 +5,15 @@ app.set('view engine', 'pug');
 app.use(exp.static('./'))
 var http = require('http').Server(app);
 // var io = require('socket.io')(http);
+var fs = require('fs');
+var _buf = fs.readFileSync('snapshot.png', function(err, buf) { return buf });
+var _md5 = require('md5')(_buf);
 
 var _port = 3000;
  
 app.listen(_port, function () { console.log('Listening on '+_port); });
 
-app.get('/', function (req, res) { res.render('index'); });
+app.get('/', function (req, res) { res.render('index', {_md5:_md5}); });
 
 // app.get('/', function(req, res){ res.sendFile(__dirname + '/index.html'); });
 
