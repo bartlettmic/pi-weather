@@ -1,19 +1,26 @@
 const fs = require('fs');
-const RaspiCam = require("raspicam");
 const Particle = require('particle-api-js');
 const particle = new Particle();
 const config = require('./config.json');
+const Raspistill = require('node-raspistill').Raspistill;
 
-try {
-    var camera = new RaspiCam({ mode: "photo", output: "/home/pi/pi-weather/snapshot.png", w: 960, h: 540, e: "png", timeout: 2000 });
-    camera.start();
-    camera.on("start", function(err, filename) {
-        setTimeout(function() { console.log("exitting..."), camera.stop(); }, camera.get("timeout") * 3.0)
+// try {
+    const camera = new Raspistill({
+        outputDir: './',
+        fileName: "snapshot.png",
+        width: 960,
+        height: 540,
+        encoding: "png",
     });
-    camera.on("read", function(err, filename) {
-        setTimeout(function() { console.log("exitting..."), camera.stop(); }, camera.get("timeout"))
-    });
-} catch (err) { console.log("Unable to access Pi Camera module.") } finally {
+    camera.takePhoto().then(() => { console.log("Photo captured")}).catch((err) => { console.log("Unable to access Pi Camera module.") })
+    // camera.start();
+    // camera.on("start", function(err, filename) {
+    //     setTimeout(function() { console.log("exitting..."), camera.stop(); }, camera.get("timeout") * 3.0)
+    // });
+    // camera.on("read", function(err, filename) {
+    //     setTimeout(function() { console.log("exitting..."), camera.stop(); }, camera.get("timeout"))
+    // });
+// } catch (err) { console.log("Unable to access Pi Camera module.") } finally {
     particle.callFunction({ deviceId: config.ID, name: 'update', argument: '', auth: config.token })
         .then(function(data) {
             console.log('Station updated, pulling sensor data...');
@@ -39,4 +46,4 @@ try {
                 },
                 function(err) { console.log('Device call failed.', err); });
         }, function(err) { console.log('Unable to update station.', err); });
-}
+// }
