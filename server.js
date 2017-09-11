@@ -11,10 +11,6 @@ schedule.scheduleJob('*/5 * * * *', function() {
     var process = childProcess.fork("./weather.js");
 });
 
-var fs = require('fs');
-var _buf = fs.readFileSync('snapshot.png', {}, function(err, buf) { return buf });
-var _md5 = require('md5')(_buf);
-
 var _port = 8080;
 
 app.listen(_port, () => { console.log('Listening on ' + _port); });

@@ -10,7 +10,10 @@ const camera = new Raspistill({
     height: 540,
     encoding: "png",
 });
-camera.takePhoto().then(() => { console.log("Photo captured") }).catch((err) => { console.log("Unable to access Pi Camera module.") })
+camera.takePhoto().then((buff) => {
+    fs.writeFileSync('md5', require('md5')(buff), 'utf8');
+    console.log("Photo captured")
+}).catch((err) => { console.log("Unable to access Pi Camera module.") })
 
 particle.callFunction({ deviceId: config.ID, name: 'update', argument: '', auth: config.token })
     .then(function(data) {
@@ -32,7 +35,7 @@ particle.callFunction({ deviceId: config.ID, name: 'update', argument: '', auth:
                         for (var v of values) output[v.body.name] = v.body.result;
                         output.timestamp = new Date().toLocaleString();
                         fs.writeFileSync('weather.json', JSON.stringify(output, null, "\t"), 'utf8');
-                        console.log("\nCurrent sensor values recorded. (" + output.timestamp +")");
+                        console.log("\nCurrent sensor values recorded. (" + output.timestamp + ")");
                     }).catch(function(err) { console.log("Unable to resolve all promises.", err); })
                 },
                 function(err) { console.log('Device call failed.', err); });
