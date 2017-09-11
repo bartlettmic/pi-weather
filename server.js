@@ -13,7 +13,7 @@ var fs = require('fs');
 var _buf = fs.readFileSync('snapshot.png', {}, function(err, buf) { return buf });
 var _md5 = require('md5')(_buf);
 
-var _port = 3000;
+var _port = 8080;
  
 app.listen(_port, function () { console.log('Listening on '+_port); });
 
