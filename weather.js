@@ -4,13 +4,12 @@ const Particle = require('particle-api-js');
 const particle = new Particle();
 const config = require('./config.json');
 
-var schedule = require('node-schedule');
-schedule.scheduleJob('*/5 * * * *', function() {
-//console.log(config);
-
 try {
     var camera = new RaspiCam({ mode: "photo", output: "/home/pi/pi-weather/snapshot.png", w: 960, h: 540, e: "png", timeout: 2000 });
     camera.start();
+    camera.on("start", function(err, filename) {
+        setTimeout(function() { console.log("exitting..."), camera.stop(); }, camera.get("timeout") * 3.0)
+    });
     camera.on("read", function(err, filename) {
         setTimeout(function() { console.log("exitting..."), camera.stop(); }, camera.get("timeout"))
     });
@@ -41,4 +40,3 @@ try {
                 function(err) { console.log('Device call failed.', err); });
         }, function(err) { console.log('Unable to update station.', err); });
 }
-});
