@@ -3,6 +3,8 @@ html
         title Lazy B Weather Analytics
         link(href='https://spoqa.github.io/spoqa-han-sans/css/SpoqaHanSans-jp.css' rel='stylesheet' type='text/css')
         script(src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous")
+        script.
+            var _md5 = $.ajax({url: "./md5", async: false, success: function (data){ return data;} }).responseText
         style.
             * {
                 font-family: 'Spoqa Han Sans', 'Spoqa Han Sans JP', 'Sans-serif';
@@ -62,8 +64,6 @@ html
                 - var _ver = process.version
                 h1="Using node " + _ver
                 div(class="cols")
-                    //- - var _md5 = fs.readFile('snapshot.png', function(err, buf) { (require('md5'))(buf) });
-                    //- - var _md5 = fs.readFileSync('snapshot.png', function(err, buf) { return md5(buf) });
                     img(src="snapshot.png?" + _md5 class="fit-cover")
                     h2(id="weather" style="margin: auto;")
                 script.
@@ -79,6 +79,7 @@ html
                     }).fail(function() {
                         console.log( "Could not load weather data from server.");
                     });
+             
 
                     function dhm(ms){
                         days = Math.floor(ms / (24*60*60*1000));

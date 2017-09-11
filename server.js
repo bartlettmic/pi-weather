@@ -1,4 +1,5 @@
 var childProcess = require('child_process');
+var fs = require('fs');
 var exp = require('express')
 var app = exp();
 app.set('views', './');
@@ -14,4 +15,4 @@ schedule.scheduleJob('*/5 * * * *', function() {
 var _port = 8080;
 
 app.listen(_port, () => { console.log('Listening on ' + _port); });
-app.get('/', function(req, res) { res.render('index', { _md5: _md5 }); });
+app.get('/', function(req, res) { res.render('index', { fs: fs }); });

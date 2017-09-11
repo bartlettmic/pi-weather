@@ -3,8 +3,10 @@
 *.png
 config.json
 weather.json
+md5
 *.save
 nohup.out
+
 
 # Logs
 logs
