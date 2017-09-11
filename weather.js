@@ -4,8 +4,8 @@ const Particle = require('particle-api-js');
 const particle = new Particle();
 const config = require('./config.json');
 
-//var schedule = require('node-schedule');
-//schedule.scheduleJob('*/5 * * * *', function() {
+var schedule = require('node-schedule');
+schedule.scheduleJob('*/5 * * * *', function() {
 //console.log(config);
 
 try {
@@ -41,4 +41,4 @@ try {
                 function(err) { console.log('Device call failed.', err); });
         }, function(err) { console.log('Unable to update station.', err); });
 }
-//});
+});

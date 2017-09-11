@@ -4,6 +4,9 @@ app.set('views', './');
 app.set('view engine', 'pug');
 app.use(exp.static('./'))
 var http = require('http').Server(app);
+var childProcess = require('child_process');
+var process = childProcess.fork("./weather.js");
+
 // var io = require('socket.io')(http);
 
 var fs = require('fs');
