@@ -12,7 +12,9 @@ schedule.scheduleJob('*/5 * * * *', function() {
     var process = childProcess.fork("./weather.js");
 });
 
+var _md5 = fs.readFileSync('md5', {}, function(err, buf) { return buf });
+
 var _port = 8080;
 
 app.listen(_port, () => { console.log('Listening on ' + _port); });
-app.get('/', function(req, res) { res.render('index', { fs: fs }); });
+app.get('/', function(req, res) { res.render('index', { _md5: _md5 }); });
