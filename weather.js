@@ -2,15 +2,9 @@ const fs = require('fs');
 const Particle = require('particle-api-js');
 const particle = new Particle();
 const config = require('./config.json');
-const Raspistill = require('node-raspistill').Raspistill;
-const camera = new Raspistill({
-    outputDir: './',
-    fileName: "snapshot",
-    width: 960,
-    height: 540,
-    encoding: "png",
-});
-camera.takePhoto().then((buff) => {
+
+new(require('node-raspistill').Raspistill)({ outputDir: './', fileName: "snapshot", width: 960, height: 540, encoding: "png", })
+.takePhoto().then((buff) => {
     fs.writeFileSync('md5', require('md5')(buff), 'utf8');
     console.log("Photo captured")
 }).catch((err) => { console.log("Unable to access Pi Camera module.") })
