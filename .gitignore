@@ -4,6 +4,7 @@
 config.json
 weather.json
 *.save
+nohup.out
 
 # Logs
 logs
