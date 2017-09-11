@@ -7,12 +7,12 @@ app.set('view engine', 'pug');
 app.use(exp.static('./'))
 // var http = require('http').Server(app);
 var schedule = require('node-schedule');
+var _md5 = fs.readFileSync('md5', {}, function(err, buf) { return buf });
 
 schedule.scheduleJob('*/5 * * * *', function() {
     var process = childProcess.fork("./weather.js");
+    _md5 = fs.readFileSync('md5', {}, function(err, buf) { return buf });
 });
-
-var _md5 = fs.readFileSync('md5', {}, function(err, buf) { return buf });
 
 var _port = 8080;
 
