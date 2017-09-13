@@ -6,7 +6,7 @@ const config = require('./config.json');
 new(require('node-raspistill').Raspistill)({ outputDir: './', fileName: "snapshot", width: 960, height: 540, encoding: "png", })
 .takePhoto().then((buff) => {
     fs.writeFileSync('md5', require('md5')(buff), 'utf8');
-    console.log("Photo captured")
+    // console.log("Photo captured")
 }).catch((err) => { console.log("Unable to access Pi Camera module.") })
 
 particle.callFunction({ deviceId: config.ID, name: 'update', argument: '', auth: config.token })
@@ -19,7 +19,7 @@ particle.callFunction({ deviceId: config.ID, name: 'update', argument: '', auth:
                             .then(function(data) {
                                 var _trunc = (+data.body.result).toFixed(2);
                                 if (!isNaN(_trunc)) data.body.result = _trunc;
-                                process.stdout.write(data.body.name + "=" + data.body.result + " ")
+                                // process.stdout.write(data.body.name + "=" + data.body.result + " ")
                                 return data;
                             }, function(err) { console.log(err) })
                         )
@@ -29,7 +29,7 @@ particle.callFunction({ deviceId: config.ID, name: 'update', argument: '', auth:
                         for (var v of values) output[v.body.name] = v.body.result;
                         output.timestamp = new Date().toLocaleString();
                         fs.writeFileSync('weather.json', JSON.stringify(output, null, "\t"), 'utf8');
-                        console.log("\nCurrent sensor values recorded. (" + output.timestamp + ")");
+                        console.log("Current sensor values recorded. (" + output.timestamp + ")");
                     }).catch(function(err) { console.log("Unable to resolve all promises.", err); })
                 },
                 function(err) { console.log('Device call failed.', err); });

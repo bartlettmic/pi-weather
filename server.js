@@ -1,4 +1,4 @@
-var childProcess = require('child_process');
+var cp = require('child_process');
 var fs = require('fs');
 var exp = require('express')
 var app = exp();
@@ -9,9 +9,11 @@ app.use(exp.static('./'))
 var schedule = require('node-schedule');
 var _md5 = fs.readFileSync('md5', {}, function(err, buf) { return buf });
 
-schedule.scheduleJob('*/5 * * * *', function() {
-    var process = childProcess.fork("./weather.js");
-    _md5 = fs.readFileSync('md5', {}, function(err, buf) { return buf });
+schedule.scheduleJob('*/5 * * * *', () => {
+    cp.fork("./weather.js")
+    .on('exit', () => { 
+        _md5 = fs.readFileSync('md5', {}, (err, buf) => { return buf }); 
+    })
 });
 
 var _port = 8080;
