@@ -3,7 +3,7 @@ const Particle = require('particle-api-js');
 const particle = new Particle();
 const config = require('./config.json');
 
-new(require('node-raspistill').Raspistill)({ outputDir: './', fileName: "snapshot", width: 960, height: 540, encoding: "png", })
+new(require('node-raspistill').Raspistill)({ outputDir: './', fileName: "snapshot", width: 960, height: 540, encoding: "jpg", })
 .takePhoto().then((buff) => {
     fs.writeFileSync('md5', require('md5')(buff), 'utf8');
     // console.log("Photo captured")
