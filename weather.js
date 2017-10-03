@@ -14,7 +14,10 @@ new(require('node-raspistill').Raspistill)({ outputDir: './', fileName: "snapsho
     fs.writeFileSync('md5', require('md5')(buff), 'utf8');
     // console.log("Photo captured")
     imgur.setCredentials(config.imgur.username, config.imgur.password, config.imgur.client);
-imgur.uploadFile('snapshot.jpg', config.imgur.album).then(() => { console.log('+') }).catch((err) => { console.error("Unable to upload to timelapse album") });
+//imgur.uploadFile('snapshot.jpg', config.imgur.album).then(() => { console.log('+') }).catch((err) => { console.error("Unable to upload to timelapse album") });
+imgur.uploadBase64(buff.toString('base64'), config.imgur.album).then(() => { console.log('+') }).catch((err) => { console.error("Unable to upload to timelapse album") });
+
+
 }).catch((err) => { console.log("Unable to access Pi Camera module.") })
 
 particle.callFunction({ deviceId: config.ID, name: 'update', argument: '', auth: config.token })
