@@ -14,12 +14,12 @@ new(require('node-raspistill').Raspistill)({ outputDir: './', fileName: "snapsho
     fs.writeFileSync('md5', require('md5')(buff), 'utf8');
     // console.log("Photo captured")
     imgur.setCredentials(config.imgur.username, config.imgur.password, config.imgur.client);
-imgur.uploadFile('snapshot.jpg', config.imgur.album) .catch(function(err) { console.error("Unable to upload to timelapse album") });
+imgur.uploadFile('snapshot.jpg', config.imgur.album).then(() => { console.log('+') }).catch((err) => { console.error("Unable to upload to timelapse album") });
 }).catch((err) => { console.log("Unable to access Pi Camera module.") })
 
 particle.callFunction({ deviceId: config.ID, name: 'update', argument: '', auth: config.token })
     .then(function(data) {
-            process.stdout.write('Station updated, pulling...\t');
+            process.stdout.write('Updated... ');
             particle.getDevice({ deviceId: config.ID, auth: config.token }).then(function(data) {
                     var promises = [];
                     for (var v of Object.getOwnPropertyNames(data.body.variables)) {
@@ -38,7 +38,7 @@ particle.callFunction({ deviceId: config.ID, name: 'update', argument: '', auth:
                         output.timestamp = new Date().toLocaleString();
                         fs.writeFileSync('weather.json', JSON.stringify(output, null, "\t"), 'utf8');
                         // for (var v of Object.getOwnPropertyNames(output)) {}
-                        process.stdout.write("Current sensor values recorded. (" + output.timestamp + ")");
+                        process.stdout.write("(" + output.timestamp + ")");
                     }).catch(function(err) { console.log("Unable to resolve all promises.", err); })
                 },
                 function(err) { console.log('Device call failed.', err); });
