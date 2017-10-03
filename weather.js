@@ -1,12 +1,26 @@
 const fs = require('fs');
 const Particle = require('particle-api-js');
 const particle = new Particle();
+const imgur = require('imgur');
 const config = require('./config.json');
+
+if (!config.imgur.client) {
+    config.imgur.client = imgur.getClientId()
+    fs.writeFileSync('config.json', JSON.stringify(config, null, "\t"), 'utf8');
+}
 
 new(require('node-raspistill').Raspistill)({ outputDir: './', fileName: "snapshot", width: 960, height: 540, encoding: "png", })
 .takePhoto().then((buff) => {
     fs.writeFileSync('md5', require('md5')(buff), 'utf8');
     // console.log("Photo captured")
+    imgur.setCredentials(config.imgur.email, config.imgur.password, config.imgur.client);
+    imgur.uploadFile('snapshot.jpg', config.imgur.album)
+    .then(function (json) {
+        console.log(json.data.link);
+    })
+    .catch(function (err) {
+        console.error(err.message);
+    });
 }).catch((err) => { console.log("Unable to access Pi Camera module.") })
 
 particle.callFunction({ deviceId: config.ID, name: 'update', argument: '', auth: config.token })
@@ -29,6 +43,9 @@ particle.callFunction({ deviceId: config.ID, name: 'update', argument: '', auth:
                         for (var v of values) output[v.body.name] = v.body.result;
                         output.timestamp = new Date().toLocaleString();
                         fs.writeFileSync('weather.json', JSON.stringify(output, null, "\t"), 'utf8');
+                        // for (var v of Object.getOwnPropertyNames(output)) {
+                        // }
+
                         console.log("Current sensor values recorded. (" + output.timestamp + ")");
                     }).catch(function(err) { console.log("Unable to resolve all promises.", err); })
                 },
