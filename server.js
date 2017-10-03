@@ -10,7 +10,7 @@ app.set('view engine', 'pug');
 app.use(exp.static('./'))
 var _md5 = fs.readFileSync('md5', {}, function(err, buf) { return buf });
 
-schedule.scheduleJob('*/5 * * * *', () => {
+schedule.scheduleJob('*/10 * * * *', () => {
     cp.fork("./weather.js")
         .on('exit', () => {
             _md5 = fs.readFileSync('md5', {}, (err, buf) => { return buf });
