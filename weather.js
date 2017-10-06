@@ -9,15 +9,14 @@ if (!config.imgur.client) {
     fs.writeFileSync('config.json', JSON.stringify(config, null, "\t"), 'utf8');
 }
 
-new(require('node-raspistill').Raspistill)({ outputDir: './', fileName: "snapshot", width: 960, height: 540, encoding: "png", })
+new(require('node-raspistill').Raspistill)({ outputDir: './', fileName: "snapshot", width: 960, height: 540, encoding: "jpg", })
 .takePhoto().then((buff) => {
     fs.writeFileSync('md5', require('md5')(buff), 'utf8');
-    // console.log("Photo captured")
-    imgur.setCredentials(config.imgur.username, config.imgur.password, config.imgur.client);
-//imgur.uploadFile('snapshot.jpg', config.imgur.album).then(() => { console.log('+') }).catch((err) => { console.error("Unable to upload to timelapse album") });
-imgur.uploadBase64(buff.toString('base64'), config.imgur.album).then(() => { console.log('+') }).catch((err) => { console.error("Unable to upload to timelapse album") });
-
-
+    if (Buffer.byteLength(buff, 'base64') / 1000 > 200) {   //Less than 200KB, probably a completely black image
+        // console.log("Photo captured")
+        imgur.setCredentials(config.imgur.username, config.imgur.password, config.imgur.client);
+        imgur.uploadBase64(buff.toString('base64'), config.imgur.album).then(() => { console.log('+') }).catch((err) => { console.error("!") });
+    } else console.log("-");
 }).catch((err) => { console.log("Unable to access Pi Camera module.") })
 
 particle.callFunction({ deviceId: config.ID, name: 'update', argument: '', auth: config.token })
