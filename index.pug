@@ -64,10 +64,6 @@ html
                 div(class="cols")
                     img(src="snapshot.jpg?" + _md5 class="fit-cover")
                     h2(id="weather" style="margin: auto;")
-                blockquote.imgur-embed-pub(lang='en', data-id='a/OPjZh')
-                    a(href='//imgur.com/OPjZh') tPImelapse
-                script(async='', src='//s.imgur.com/min/embed.js', charset='utf-8')
-
                 script.
                     var weather;
                     $.getJSON("./weather.json", function(json) { 
