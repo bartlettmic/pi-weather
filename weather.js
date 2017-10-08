@@ -3,6 +3,7 @@ const Particle = require('particle-api-js');
 const particle = new Particle();
 const imgur = require('imgur');
 const config = require('./config.json');
+console.log(this)
 
 if (!config.imgur.client) {
     config.imgur.client = imgur.getClientId()
@@ -12,7 +13,7 @@ if (!config.imgur.client) {
 new(require('node-raspistill').Raspistill)({ outputDir: './', fileName: "snapshot", width: 1920, height: 1080, encoding: "jpg", })
 .takePhoto().then((buff) => {
     fs.writeFileSync('md5', require('md5')(buff), 'utf8');
-    if (Buffer.byteLength(buff, 'base64') / 1000 > 190) {   //Less than 190KB, probably a completely black image
+    if (Buffer.byteLength(buff, 'base64') / 1000 > 190) { //Less than 190KB, probably a completely black image
         // console.log("Photo captured")
         imgur.setCredentials(config.imgur.username, config.imgur.password, config.imgur.client);
         imgur.uploadBase64(buff.toString('base64'), config.imgur.album).then(() => { console.log('+') }).catch((err) => { console.error("!") });

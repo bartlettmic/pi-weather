@@ -1,69 +1,27 @@
 html
     head
         title Lazy B Weather Analytics
-        link(href='https://spoqa.github.io/spoqa-han-sans/css/SpoqaHanSans-jp.css' rel='stylesheet' type='text/css')
         script(src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous")
-        style.
-            * {
-                font-family: 'Spoqa Han Sans', 'Spoqa Han Sans JP', 'Sans-serif';
-                font-weight: 200;
-                color: #ccc;
-            }
-
-            body {
-                background-color: #222;
-                /* overflow: hidden; */
-                margin: 0;
-                padding: 0;
-                max-height: 100%;
-            }
-
-            .center {
-                top: 0;
-                width: 100%;
-                height: 100vh;
-                margin: auto;
-                flex-direction: column;
-                text-align: center;
-            }
-
-            .cols {
-                display: flex;
-                flex-direction: row;
-                text-align: center;
-                justify-content: space-around;
-                align-content: space-around;
-                margin: auto;
-                white-space: nowrap;
-                font-size: 2.5vmin;
-                max-height: 75vh;
-                min-width: 100vmin;
-            }
-
-            .fit-cover {
-                width: 100vmin;
-                max-width: 100vw;
-                object-fit: scale-down;
-                margin: auto;
-            }
-
-            h1 { 
-                font-size: 5vmin; 
-                padding: 0;
-                margin: 0;
-            }
-
-
+        link(rel="stylesheet", href="/style.css")
     body
-
-        div(class="center")
+        //- div(class="center" style="background: radial-gradient(rgba(" + palette + ", 1) 0%, rgba(255, 255, 255, 0) 90%);")
+        div(class="center" style="background-color: rgba(" + palette + ", 0.75)")
             div
-                h1 Under construction.
-                - var _ver = process.version
-                h1="Using node " + _ver
+                img(src=config.imageFileName + "?" + _md5 class="fit-cover")
+                div(class="container")
+                    p
+                        h1 Under construction.
+                        - var _ver = process.version
+                        h1="Using node " + _ver
                 div(class="cols")
-                    img(src="snapshot.jpg?" + _md5 class="fit-cover")
                     h2(id="weather" style="margin: auto;")
+                div(class="cols")
+                    //- div(style="background-color: rgb(" + palette.Vibrant._rgb.join(",") + ");")="Vibrant"
+                    //- div(style="background-color: rgb(" + palette.LightVibrant._rgb.join(",") + ");")="LightVibrant"
+                    //- div(style="background-color: rgb(" + palette.DarkVibrant._rgb.join(",") + ");")="DarkVibrant"
+                    //- div(style="background-color: rgb(" + palette.Muted._rgb.join(",") + ");")="Muted"
+                    //- div(style="background-color: rgb(" + palette.LightMuted._rgb.join(",") + ");")="LightMuted"
+                    //- div(style="background-color: rgb(" + palette.DarkMuted._rgb.join(",") + ");")="DarkMuted"
                 script.
                     var weather;
                     $.getJSON("./weather.json", function(json) { 
