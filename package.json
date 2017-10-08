@@ -23,6 +23,7 @@
     "md5": "^2.2.1",
     "node-raspistill": "0.0.14",
     "node-schedule": "^1.2.4",
+    "node-vibrant": "^3.0.0-alpha.2",
     "nodemon": "^1.12.0",
     "particle-api-js": "^6.5.0",
     "pug": "^0.1.0"
