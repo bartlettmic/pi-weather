@@ -45,10 +45,11 @@ canvas {
     /* justify-content: space-around; */
     /* border-radius: 10em; */
     /* box-shadow: inset 0 0 0 3000px rgba(225, 225, 255, 0.5); */
-    box-shadow: 0em 3em 3em 1em rgba(0, 0, 0, 0.5);
+    box-shadow: 0em 3em 3em 1em rgba(0, 0, 0, 0.65);
     /* background: -moz-radial-gradient(rgba(227, 227, 227, 1) 10%, rgba(255, 255, 255, 0) 80%); */
     /* background: -webkit-radial-gradient(rgba(227, 227, 227, 1) 10%, rgba(255, 255, 255, 0) 90%); */
     /* background-position: center; */
+    z-index: 1;
 }
 
 .cols {
