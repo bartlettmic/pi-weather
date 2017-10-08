@@ -2,9 +2,11 @@ html
     head
         title Lazy B Weather Analytics
         script(src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous")
-        link(rel="stylesheet", href="/style.css")
+        script(src="./rain.js")
+        link(rel="stylesheet", href="/style.css")        
     body
         img(src=config.imageFileName + "?" + _md5 class="fit-cover")
+        canvas(id="container")
         //- div(class="center" style="background: radial-gradient(rgba(" + palette + ", 1) 0%, rgba(255, 255, 255, 0) 90%);")
         //- div(class="center" style="box-shadow: inset 0 0 10em 5em rgba(" + palette + ", 0.75)")
         div(class="center" style="background-color: rgba(" + palette + ", 0.75)")

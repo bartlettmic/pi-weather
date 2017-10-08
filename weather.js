@@ -12,6 +12,8 @@ if (!config.imgur.client) {
 new(require('node-raspistill').Raspistill)({ outputDir: './', fileName: "snapshot", width: 1920, height: 1080, encoding: "jpg", })
 .takePhoto().then((buff) => {
     fs.writeFileSync('md5', require('md5')(buff), 'utf8');
+    fs.writeFileSync("./img/weather/texture-rain-bg.png", buff, 'utf8');
+    fs.writeFileSync("./img/weather/texture-rain-fg.png", buff, 'utf8');
     if (Buffer.byteLength(buff, 'base64') / 1000 > 190) { //Less than 190KB, probably a completely black image
         // console.log("Photo captured")
         imgur.setCredentials(config.imgur.username, config.imgur.password, config.imgur.client);
