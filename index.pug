@@ -4,46 +4,37 @@ html
         script(src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous")
         link(rel="stylesheet", href="/style.css")
     body
+        img(src=config.imageFileName + "?" + _md5 class="fit-cover")
         //- div(class="center" style="background: radial-gradient(rgba(" + palette + ", 1) 0%, rgba(255, 255, 255, 0) 90%);")
+        //- div(class="center" style="box-shadow: inset 0 0 10em 5em rgba(" + palette + ", 0.75)")
         div(class="center" style="background-color: rgba(" + palette + ", 0.75)")
-            div
-                img(src=config.imageFileName + "?" + _md5 class="fit-cover")
-                div(class="container")
-                    p
-                        h1 Under construction.
-                        - var _ver = process.version
-                        h1="Using node " + _ver
-                div(class="cols")
-                    h2(id="weather" style="margin: auto;")
-                div(class="cols")
-                    //- div(style="background-color: rgb(" + palette.Vibrant._rgb.join(",") + ");")="Vibrant"
-                    //- div(style="background-color: rgb(" + palette.LightVibrant._rgb.join(",") + ");")="LightVibrant"
-                    //- div(style="background-color: rgb(" + palette.DarkVibrant._rgb.join(",") + ");")="DarkVibrant"
-                    //- div(style="background-color: rgb(" + palette.Muted._rgb.join(",") + ");")="Muted"
-                    //- div(style="background-color: rgb(" + palette.LightMuted._rgb.join(",") + ");")="LightMuted"
-                    //- div(style="background-color: rgb(" + palette.DarkMuted._rgb.join(",") + ");")="DarkMuted"
-                script.
-                    var weather;
-                    $.getJSON("./weather.json", function(json) { 
-                        json.uptime = dhm(json.uptime);
-                        weather = JSON.stringify(json, null, "\t").replace(/\"/g, "").slice(3,-2).split(/,\n\t*/).slice(0,-1).join("<br/>")
-                        var _ts = (new Date(json.timestamp)).toLocaleString().split(", ");
-                        weather += "<br/>Last updated at " + _ts[1] +", "+_ts[0];
-                        }).done(function() {
-                        document.getElementById("weather").innerHTML = weather;
-                        console.log("json loaded")
-                    }).fail(function() {
-                        console.log( "Could not load weather data from server.");
-                    });
-             
+            h1 Under construction.
+            - var _ver = process.version
+            h1="Using node " + _ver
+            div(class="cols")
+                h2(id="weather" style="margin: auto;")
+            script.
+                var weather;
+                $.getJSON("./weather.json", function(json) { 
+                    json.uptime = dhm(json.uptime);
+                    weather = JSON.stringify(json, null, "\t").replace(/\"/g, "").slice(3,-2).split(/,\n\t*/).slice(0,-1).join("<br/>")
+                    var _ts = (new Date(json.timestamp)).toLocaleString().split(", ");
+                    weather += "<br/>Last updated at " + _ts[1] +", "+_ts[0];
+                    }).done(function() {
+                    document.getElementById("weather").innerHTML = weather;
+                    console.log("json loaded")
+                }).fail(function() {
+                    console.log( "Could not load weather data from server.");
+                });
+            
 
-                    function dhm(ms){
-                        days = Math.floor(ms / (24*60*60*1000));
-                        daysms=ms % (24*60*60*1000);
-                        hours = Math.floor((daysms)/(60*60*1000));
-                        hoursms=ms % (60*60*1000);
-                        minutes = Math.floor((hoursms)/(60*1000));
-                        minutesms=ms % (60*1000);
-                        sec = Math.floor((minutesms)/(1000));
-                        return (days > 0 ? days+"d " : "") + hours+"h "+minutes+"m "+sec+"s";
-                    }
+                function dhm(ms){
+                    days = Math.floor(ms / (24*60*60*1000));
+                    daysms=ms % (24*60*60*1000);
+                    hours = Math.floor((daysms)/(60*60*1000));
+                    hoursms=ms % (60*60*1000);
+                    minutes = Math.floor((hoursms)/(60*1000));
+                    minutesms=ms % (60*1000);
+                    sec = Math.floor((minutesms)/(1000));
+                    return (days > 0 ? days+"d " : "") + hours+"h "+minutes+"m "+sec+"s";
+                }

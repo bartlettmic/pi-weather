@@ -1,45 +1,47 @@
-@import url('https://fonts.googleapis.com/css?family=Assistant:200|Biryani:200|Roboto:100');
+@import url('https://fonts.googleapis.com/css?family=Assistant:200|Biryani:200|Roboto:200');
 * {
-    font-weight: 100;
+    font-weight: 200;
+    /* color: #ddd; */
     color: #222;
-    font-family: 'Roboto', sans-serif;
+    font-family: 'Assistant', sans-serif;
 }
 
 body {
     display: flex;
-    background-color: #222;
+    /* background-color: #222; */
     /* overflow: hidden; */
     margin: 0;
     padding: 0;
     height: 100%;
-    overflow: hidden;
+    /* overflow: hidden; */
 }
 
 .center {
     /* top: 0; */
     /* width: 100%; */
     /* height: 100vh; */
+    /* padding-top: 2.5em; */
+    /* padding-bottom: 2.5em; */
+    /* padding-left: -2em; */
+    /* padding-right: 0; */
     padding: 2.5em;
     display: flex;
     margin: auto;
     flex-direction: column;
     text-align: center;
+    /* background-color: rgba(0, 0, 0, 0.4); */
+    /* background-color: rgba(225, 225, 225, 0.4); */
     /* justify-content: space-around; */
     /* border-radius: 10em; */
     /* box-shadow: inset 0 0 0 3000px rgba(225, 225, 255, 0.5); */
+    box-shadow: 0em 3em 3em 1em rgba(0, 0, 0, 0.5);
     /* background: -moz-radial-gradient(rgba(227, 227, 227, 1) 10%, rgba(255, 255, 255, 0) 80%); */
     /* background: -webkit-radial-gradient(rgba(227, 227, 227, 1) 10%, rgba(255, 255, 255, 0) 90%); */
     /* background-position: center; */
 }
 
-.cols div {
-    width: 100%;
-    height: 1em;
-}
-
 .cols {
     display: flex;
-    background: inherit;
     flex-direction: row;
     text-align: center;
     justify-content: space-around;
@@ -48,7 +50,7 @@ body {
     white-space: nowrap;
     font-size: 2.5vmin;
     max-height: 75vh;
-    min-width: 100vmin;
+    /* min-width: 100vmin; */
 }
 
 .fit-cover {

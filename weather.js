@@ -3,7 +3,6 @@ const Particle = require('particle-api-js');
 const particle = new Particle();
 const imgur = require('imgur');
 const config = require('./config.json');
-console.log(this)
 
 if (!config.imgur.client) {
     config.imgur.client = imgur.getClientId()
