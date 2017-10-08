@@ -9,7 +9,7 @@ if (!config.imgur.client) {
     fs.writeFileSync('config.json', JSON.stringify(config, null, "\t"), 'utf8');
 }
 
-new(require('node-raspistill').Raspistill)({ outputDir: './', fileName: config.imageFileName, width: 960, height: 540, encoding: "jpg", })
+new(require('node-raspistill').Raspistill)({ outputDir: './', fileName: "snapshot", width: 1920, height: 1080, encoding: "jpg", })
 .takePhoto().then((buff) => {
     fs.writeFileSync('md5', require('md5')(buff), 'utf8');
     if (Buffer.byteLength(buff, 'base64') / 1000 > 190) { //Less than 190KB, probably a completely black image
