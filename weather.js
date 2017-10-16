@@ -9,13 +9,13 @@ if (!config.imgur.client) {
     fs.writeFileSync('config.json', JSON.stringify(config, null, "\t"), 'utf8');
 }
 
-new(require('node-raspistill').Raspistill)({ outputDir: './', fileName: config.imageFileName, width: 1920, height: 1080, encoding: "jpg", })
+new(require('node-raspistill').Raspistill)({ outputDir: './', fileName: config.imageFileName.split('.')[0], width: 1920, height: 1080, encoding: config.imageFileName.split('.')[1], })
 .takePhoto().then((buff) => {
     fs.writeFileSync('md5', require('md5')(buff), 'utf8');
     fs.writeFileSync("./img/weather/texture-rain-bg.png", buff, 'utf8');
     fs.writeFileSync("./img/weather/texture-rain-fg.png", buff, 'utf8');
     process.stdout.write(" "+(Buffer.byteLength(buff,'base64')/1000) + "KB ");
-    if (Buffer.byteLength(buff, 'base64') / 1000 > 800) {
+    if (Buffer.byteLength(buff, 'base64') / 1000 > 600) {
         // console.log("Photo captured")
         imgur.setCredentials(config.imgur.username, config.imgur.password, config.imgur.client);
         imgur.uploadBase64(buff.toString('base64'), config.imgur.album).then(() => { console.log('+') }).catch((err) => { console.error("!") });
