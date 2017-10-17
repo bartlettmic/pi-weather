@@ -8,12 +8,34 @@
 
 body {
     display: flex;
-    /* background-color: #222; */
+    background-color: #222;
     /* overflow: hidden; */
     margin: 0;
     padding: 0;
     height: 100%;
-    /* overflow: hidden; */
+     overflow: hidden; 
+}
+
+body:before {
+    content: "";
+    position: absolute;
+    width: 110%;
+    height: 110%;
+    background: inherit;
+    z-index: -1;
+    position: absolute;
+    left: -25px; 
+    right: 0;
+    top: -25px; 
+    bottom: 0;
+    box-shadow: inset 0 0 200px 200px rgba(255, 255, 255, 0.3);
+    
+    
+    
+    filter: blur(5px);
+    -moz-filter: blur(5px);
+    -webkit-filter: blur(5px);
+    -o-filter: blur(5px);
 }
 
 canvas {
@@ -28,14 +50,6 @@ canvas {
 }
 
 .center {
-    /* top: 0; */
-    /* width: 100%; */
-    /* height: 100vh; */
-    /* padding-top: 2.5em; */
-    /* padding-bottom: 2.5em; */
-    /* padding-left: -2em; */
-    /* padding-right: 0; */
-    padding: 2.5em;
     display: flex;
     margin: auto;
     flex-direction: column;
@@ -49,7 +63,8 @@ canvas {
     /* background: -moz-radial-gradient(rgba(227, 227, 227, 1) 10%, rgba(255, 255, 255, 0) 80%); */
     /* background: -webkit-radial-gradient(rgba(227, 227, 227, 1) 10%, rgba(255, 255, 255, 0) 90%); */
     /* background-position: center; */
-    z-index: 1;
+    /* z-index: 1; */
+    filter: none;
 }
 
 .cols {
@@ -60,9 +75,25 @@ canvas {
     align-content: space-around;
     margin: auto;
     white-space: nowrap;
-    font-size: 2.5vmin;
+    font-size: 2.75vmin;
     max-height: 75vh;
     /* min-width: 100vmin; */
+}
+
+.rows {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    justify-content: space-around;
+    align-content: space-around;
+    margin: auto;
+    white-space: nowrap;
+    /* padding-top: 1em; */
+    
+}
+
+.cols * {
+     padding: 0.5em; 
 }
 
 .fit-cover {

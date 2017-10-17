@@ -2,26 +2,35 @@ html
     head
         title Lazy B Weather Analytics
         script(src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous")
-        script(src="./rain.js")
+        //- script(src="./rain.js")
+        - var _uq = Date.now()
+        style="body { background-image: url(./" + config.imageFileName + "?" + _uq + "); }"
         link(rel="stylesheet", href="/style.css")        
     body
-        img(src=config.imageFileName + "?" + _md5 class="fit-cover")
+        //- img(src=config.imageFileName + "?" + _md5 class="fit-cover")
         canvas(id="container")
         //- div(class="center" style="background: radial-gradient(rgba(" + palette + ", 1) 0%, rgba(255, 255, 255, 0) 90%);")
         //- div(class="center" style="box-shadow: inset 0 0 10em 5em rgba(" + palette + ", 0.75)")
         div(class="center" style="background-color: rgba(" + palette + ", 0.75)")
-            h1 Under construction.
             - var _ver = process.version
-            h1="Using node " + _ver
+            div(class="rows")
+                h1="Using node " + _ver
+                - var _ts = (new Date(weather.timestamp)).toLocaleString();
+                h1="Last updated at " + _ts
+                
+                //MAKE THIS MORE CROSS PLATFORM WITH .hour() AND THE LIKE
+                
             div(class="cols")
+                video(autoplay='', loop='', muted='')
+                    source(src='http://i.imgur.com/JqNIMcx.mp4', type='video/mp4')
                 h2(id="weather" style="margin: auto;")
             script.
                 var weather;
                 $.getJSON("./weather.json", function(json) { 
                     json.uptime = dhm(json.uptime);
                     weather = JSON.stringify(json, null, "\t").replace(/\"/g, "").slice(3,-2).split(/,\n\t*/).slice(0,-1).join("<br/>")
-                    var _ts = (new Date(json.timestamp)).toLocaleString().split(", ");
-                    weather += "<br/>Last updated at " + _ts[1] +", "+_ts[0];
+                    //- var _ts = (new Date(json.timestamp)).toLocaleString().split(", ");
+                    //- weather += "<br/>Last updated at " + _ts[1] +", "+_ts[0];
                     }).done(function() {
                     document.getElementById("weather").innerHTML = weather;
                     console.log("json loaded")
