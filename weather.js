@@ -14,7 +14,7 @@ new(require('node-raspistill').Raspistill)({ outputDir: './', fileName: config.i
     fs.writeFileSync('md5', require('md5')(buff), 'utf8');
     fs.writeFileSync("./img/weather/texture-rain-bg.png", buff, 'utf8');
     fs.writeFileSync("./img/weather/texture-rain-fg.png", buff, 'utf8');
-    process.stdout.write(" "+(Buffer.byteLength(buff,'base64')/1000) + "KB ");
+    process.stdout.write(" " + (Buffer.byteLength(buff, 'base64') / 1000) + "KB ");
     if (Buffer.byteLength(buff, 'base64') / 1000 > 600) {
         imgur.setCredentials(config.imgur.username, config.imgur.password, config.imgur.client);
         imgur.uploadBase64(buff.toString('base64'), config.imgur.album).then(() => { console.log('+') }).catch((err) => { console.error("!") });
@@ -40,6 +40,7 @@ particle.callFunction({ deviceId: config.ID, name: 'update', argument: '', auth:
                         var output = {};
                         for (var v of values) output[v.body.name] = v.body.result;
                         output.timestamp = Date.now();
+                        output.rain *= 0.011;
                         fs.writeFileSync('weather.json', JSON.stringify(output, null, "\t"), 'utf8');
                         // for (var v of Object.getOwnPropertyNames(output)) {}
                         process.stdout.write(output.timestamp);
