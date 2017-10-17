@@ -30,7 +30,7 @@ app.listen(_port, () => { console.log('Listening on ' + _port); });
 app.get('/', function(req, res) { res.render('index', { config: config, palette: palette, weather: weather }); });
 
 function getColor(palette) {
-    // if (palette.LightVibrant) return palette.LightVibrant._rgb.map((c) => { return Math.round(c) }).join(",");
+    if (palette.LightVibrant) return palette.LightVibrant._rgb.map((c) => { return Math.round(c) }).join(",");
     if (palette.LightMuted) return palette.LightMuted._rgb.map((c) => { return Math.round(c) }).join(",");
     // if (palette.Vibrant) return palette.Vibrant._rgb.map((c) => { return Math.round(c) }).join(",");
     if (palette.Muted) return palette.Muted._rgb.map((c) => { return Math.round(c) }).join(",");
