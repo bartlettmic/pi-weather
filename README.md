@@ -15,9 +15,6 @@ Repo to easily modify front-end of raspberry-pi local weather visualization, for
 
 - [ ] *UPDATE THE DANG TUTORIAL THIS SHIT IS SIMPLY INCORRECT NOW*
 
-
-[Consider using flask in the future](http://www.raspberrypi-spy.co.uk/2017/07/create-a-basic-python-web-server-with-flask/)
-
 ## How to replicate:
 
 * First, choose what sort stack you want
