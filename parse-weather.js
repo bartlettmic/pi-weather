@@ -3,6 +3,7 @@
             var d = new Date(+ms);
             return ((d.getHours() + 11) % 12 + 1) +
                 ':' + (d.getMinutes() < 10 ? '0' + d.getMinutes() : d.getMinutes()) +
+                ':' + (d.getSeconds() < 10 ? '0' + d.getSeconds() : d.getSeconds()) +
                 ' ' + (d.getHours() > 12 ? 'PM' : 'AM') +
                 ', ' + (d.getMonth() + 1) +
                 '/' + d.getDate() +

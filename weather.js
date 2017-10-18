@@ -1,11 +1,10 @@
-module.exports = function() {
+module.exports = function(callback) {
     const fs = require('fs');
     const Particle = require('particle-api-js');
     const particle = new Particle();
     const imgur = require('imgur');
     const config = require('./config');
     const parse = require('./parse-weather');
-
 
     if (!config.imgur.client) {
         config.imgur.client = imgur.getClientId()
@@ -21,9 +20,8 @@ module.exports = function() {
             imgur.setCredentials(config.imgur.username, config.imgur.password, config.imgur.client);
             imgur.uploadBase64(buff.toString('base64'), config.imgur.album).then(() => { console.log('+') }).catch((err) => { console.error("!") });
         } else console.log("-");
-    }).catch((err) => { console.log("Unable to access Pi Camera module.") })
+    }).catch((err) => { console.log("Unable to access Pi Camera module."); callback(err) })
 
-    var output = {};
 
     particle.callFunction({ deviceId: config.ID, name: 'update', argument: '', auth: config.token })
         .then(function(data) {
@@ -37,22 +35,22 @@ module.exports = function() {
                                     if (!isNaN(_trunc)) data.body.result = _trunc;
                                     // process.stdout.write(data.body.name + "=" + data.body.result + " ")
                                     return data;
-                                }, function(err) { console.log(err) })
+                                }, function(err) { console.log(err); callback(err) })
                             )
                         }
                         Promise.all(promises).then(values => {
+                            var output = {};
                             for (var v of values) output[v.body.name] = v.body.result;
                             output.timestamp = Date.now().toString();
                             output.rain *= 0.011;
+                            output = parse(output)
                             fs.writeFileSync('weather.json', JSON.stringify(output, null, "\t"), 'utf8');
                             // for (var v of Object.getOwnPropertyNames(output)) {}
                             process.stdout.write(output.timestamp);
-                            output = parse(output)
-                        }).catch(function(err) { console.log("Unable to resolve all promises.", err); })
+                            return callback(null, output)
+                        }).catch(function(err) { console.log("Unable to resolve all promises."); callback(err) })
                     },
-                    function(err) { console.log('Device call failed.', err); });
+                    function(err) { console.log('Device call failed.', err); callback(err) });
             },
-            function(err) { console.log('Unable to update station.', err); });
-
-    return output;
+            function(err) { console.log('Unable to update station.', err); callback(err)});
 }

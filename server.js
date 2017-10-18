@@ -6,45 +6,43 @@ const vibrant = require('node-vibrant')
 const config = require('./config');
 const parser = require('./parse-weather');
 const weather = require('./weather.js')
-var photonWeatherOutput = weather()
+var photonWeatherOutput, palette;
+
+var update = function() {
+    weather((err, output) => {
+        if (err) console.log(err)
+        else {
+            photonWeatherOutput = output;
+            palette = new vibrant(config.imageFileName, {}).getPalette((err, pal) => { palette = getColor(pal) })
+        }
+    })
+}
+update()
+
+setInterval(update, 60000)
+// setInterval(update, 300000)
 
 const app = exp();
 app.set('views', './');
 app.set('view engine', 'pug');
 app.use(exp.static('./'))
-    // var _md5 = fs.readFileSync('md5', {}, function(err, buf) { return buf });
-var palette = new vibrant(config.imageFileName, {}).getPalette((err, pal) => {
-    palette = getColor(pal)
-    console.log(palette)
-})
 
-schedule.scheduleJob('*/1 * * * *', () => {
-    // var _cp = cp.fork("./weather.js").on('exit', () => {
-    //     // _md5 = fs.readFileSync('md5', {}, (err, buf) => { return buf });
-        palette = new vibrant(config.imageFileName, {}).getPalette((err, pal) => { palette = getColor(pal) })
-    //     weather = JSON.parse(fs.readFileSync('./weather.json', 'utf8'));
-    // })
-   photonWeatherOutput = weather();
-    
-});
+// schedule.scheduleJob('*/1 * * * *', () => {
+
+// });
 
 var _port = 8080;
 
-// console.log(parser(weather))
-
-// const http = require('http').Server(app);
 app.listen(_port, () => { console.log('Listening on ' + _port); });
 
 //Request -> Response
 app.get('/', function(req, res) {
-    let _data = parser(photonWeatherOutput);
-    
     res.render('index', {
         config: config,
         palette: palette,
-        measurements: _data.measurements,
-        timestamp: _data.timestamp,
-        uptime: _data.uptime
+        measurements: photonWeatherOutput.measurements,
+        timestamp: photonWeatherOutput.timestamp,
+        uptime: photonWeatherOutput.uptime
     });
 });
 
