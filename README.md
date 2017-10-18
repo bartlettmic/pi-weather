@@ -2,7 +2,7 @@
 Repo to easily modify front-end of raspberry-pi local weather visualization, forecast (eventually), *and* analytics server. Mathematical! (*maybe*)
 
 ## TO DO:
-* Center weather data in CLI browsers
+- [ ] Center weather data in CLI browsers
 * Make the data actually refresh somehow with magical object function passes
     * Obviously child-proc has to update local weather object. How to pass changes along though?
 * Rain effect
