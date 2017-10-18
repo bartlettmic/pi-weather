@@ -39,7 +39,7 @@ particle.callFunction({ deviceId: config.ID, name: 'update', argument: '', auth:
                     Promise.all(promises).then(values => {
                         var output = {};
                         for (var v of values) output[v.body.name] = v.body.result;
-                        output.timestamp = Date.now();
+                        output.timestamp = Date.now().toString();
                         output.rain *= 0.011;
                         fs.writeFileSync('weather.json', JSON.stringify(output, null, "\t"), 'utf8');
                         // for (var v of Object.getOwnPropertyNames(output)) {}

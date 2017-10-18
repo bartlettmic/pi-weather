@@ -13,7 +13,7 @@ body {
     margin: 0;
     padding: 0;
     height: 100%;
-     overflow: hidden; 
+    overflow: hidden;
 }
 
 body:before {
@@ -24,14 +24,11 @@ body:before {
     background: inherit;
     z-index: -1;
     position: absolute;
-    left: -25px; 
+    left: -25px;
     right: 0;
-    top: -25px; 
+    top: -25px;
     bottom: 0;
     box-shadow: inset 0 0 200px 200px rgba(255, 255, 255, 0.3);
-    
-    
-    
     filter: blur(5px);
     -moz-filter: blur(5px);
     -webkit-filter: blur(5px);
@@ -50,9 +47,9 @@ canvas {
 }
 
 .center {
-    display: flex;
+    /* display: flex; */
     margin: auto;
-    flex-direction: column;
+    /* flex-direction: column; */
     text-align: center;
     /* background-color: rgba(0, 0, 0, 0.4); */
     /* background-color: rgba(225, 225, 225, 0.4); */
@@ -64,53 +61,65 @@ canvas {
     /* background: -webkit-radial-gradient(rgba(227, 227, 227, 1) 10%, rgba(255, 255, 255, 0) 90%); */
     /* background-position: center; */
     /* z-index: 1; */
-    filter: none;
+    /* filter: none; */
 }
 
 .cols {
-    display: flex;
-    flex-direction: row;
-    text-align: center;
-    justify-content: space-around;
-    align-content: space-around;
-    margin: auto;
-    white-space: nowrap;
-    font-size: 2.75vmin;
-    max-height: 75vh;
+    /* display: flex; */
+    /* flex-direction: row; */
+    /* text-align: center; */
+    /* justify-content: space-around; */
+    /* align-content: space-around; */
+    /* margin: auto; */
+    /* white-space: nowrap; */
+    /* font-size: 2.75vmin; */
+    /* max-height: 75vh; */
     /* min-width: 100vmin; */
 }
 
 .rows {
     display: flex;
     flex-direction: column;
-    text-align: center;
-    justify-content: space-around;
-    align-content: space-around;
+    align-items: center;
     margin: auto;
     white-space: nowrap;
     /* padding-top: 1em; */
-    
 }
 
+
+/* 
 .cols * {
-     padding: 0.5em; 
-}
+      padding: 0.5em;  
+} */
 
-.fit-cover {
-    /* width: 100vmin; */
-    /* max-width: 100vw; */
-    /* object-fit: scale-down; */
-    /* margin: auto; */
+
+/* .fit-cover {
+     width: 100vmin; 
+     max-width: 100vw; 
+     object-fit: scale-down; 
+     margin: auto; 
     position: absolute;
     height: 100vh;
     width: 100vw;
     top: 0;
     left: 0;
     z-index: -1;
+} */
+
+.underlined {
+    border-bottom: 0.5vh solid black;
 }
 
 h1 {
     font-size: 5vmin;
+    padding: 0;
+    margin: 0;
+    display: inline-table;
+    /* border: 1px solid pink; */
+}
+
+p {
+    font-size: 4vmin;
     padding: 0;
     margin: 0;
 }
