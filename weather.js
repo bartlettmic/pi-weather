@@ -4,6 +4,8 @@ module.exports = function() {
     const particle = new Particle();
     const imgur = require('imgur');
     const config = require('./config');
+    const parse = require('./parse-weather');
+
 
     if (!config.imgur.client) {
         config.imgur.client = imgur.getClientId()
@@ -45,6 +47,7 @@ module.exports = function() {
                             fs.writeFileSync('weather.json', JSON.stringify(output, null, "\t"), 'utf8');
                             // for (var v of Object.getOwnPropertyNames(output)) {}
                             process.stdout.write(output.timestamp);
+                            output = parse(output)
                         }).catch(function(err) { console.log("Unable to resolve all promises.", err); })
                     },
                     function(err) { console.log('Device call failed.', err); });
