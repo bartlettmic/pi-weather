@@ -6,6 +6,7 @@ module.exports = function(callback) {
     const config = require('./config');
     const parse = require('./parse-weather');
 
+    imgur.setCredentials(config.imgur.username, config.imgur.password, config.imgur.client);
     if (!config.imgur.client) {
         config.imgur.client = imgur.getClientId()
         fs.writeFileSync('config.json', JSON.stringify(config, null, "\t"), 'utf8');
@@ -13,13 +14,10 @@ module.exports = function(callback) {
 
     new(require('node-raspistill').Raspistill)({ outputDir: './', fileName: config.imageFileName.split('.')[0], width: 1920, height: 1080, encoding: config.imageFileName.split('.')[1], })
     .takePhoto().then((buff) => {
-        fs.writeFileSync("./img/weather/texture-rain-bg.png", buff, 'utf8');
-        fs.writeFileSync("./img/weather/texture-rain-fg.png", buff, 'utf8');
         process.stdout.write(" " + (Buffer.byteLength(buff, 'base64') / 1000) + "KB ");
         if (Buffer.byteLength(buff, 'base64') / 1000 > 600) {
-            imgur.setCredentials(config.imgur.username, config.imgur.password, config.imgur.client);
             imgur.uploadBase64(buff.toString('base64'), config.imgur.album).then(() => { console.log('+') }).catch((err) => { console.error("!") });
-        } else console.log("-");
+        } else console.log("-")
     }).catch((err) => { console.log("Unable to access Pi Camera module."); callback(err) })
 
 
@@ -35,7 +33,8 @@ module.exports = function(callback) {
                                     if (!isNaN(_trunc)) data.body.result = _trunc;
                                     // process.stdout.write(data.body.name + "=" + data.body.result + " ")
                                     return data;
-                                }, function(err) { console.log(err); callback(err) })
+                                }, function(err) { console.log(err);
+                                    callback(err) })
                             )
                         }
                         Promise.all(promises).then(values => {
@@ -48,9 +47,12 @@ module.exports = function(callback) {
                             // for (var v of Object.getOwnPropertyNames(output)) {}
                             process.stdout.write(output.timestamp);
                             return callback(null, output)
-                        }).catch(function(err) { console.log("Unable to resolve all promises."); callback(err) })
+                        }).catch(function(err) { console.log("Unable to resolve all promises.");
+                            callback(err) })
                     },
-                    function(err) { console.log('Device call failed.', err); callback(err) });
+                    function(err) { console.log('Device call failed.', err);
+                        callback(err) });
             },
-            function(err) { console.log('Unable to update station.', err); callback(err)});
+            function(err) { console.log('Unable to update station.', err);
+                callback(err) });
 }

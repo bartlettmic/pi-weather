@@ -1,10 +1,8 @@
-const cp = require('child_process');
 const fs = require('fs');
 const exp = require('express')
 const schedule = require('node-schedule');
 const vibrant = require('node-vibrant')
 const config = require('./config');
-const parser = require('./parse-weather');
 const weather = require('./weather.js')
 var photonWeatherOutput, palette;
 
@@ -19,8 +17,8 @@ var update = function() {
 }
 update()
 
-setInterval(update, 60000)
-// setInterval(update, 300000)
+// setInterval(update, 60000)
+setInterval(update, 300000)
 
 const app = exp();
 app.set('views', './');
