@@ -1,16 +1,12 @@
 html
     head
         title Lazy B Weather Analytics
-        meta(http-equiv="refresh", content="300")
+        meta(http-equiv="refresh", content="60")
         //- script(src="./rain.js")
-        - var _uq = Date.now()
-        style="body { background-image: url(./" + config.imageFileName + "?" + weather.timestamp + "); }"
+        style="body { background-image: url(./" + config.imageFileName + "?" + new Date(timestamp).getTime() + "); }"
         link(rel="stylesheet", href="/style.css")        
     body
-        //- img(src=config.imageFileName + "?" + _md5 class="fit-cover")
         canvas(id="container")
-        //- div(class="center" style="background: radial-gradient(rgba(" + palette + ", 1) 0%, rgba(255, 255, 255, 0) 90%);")
-        //- div(class="center" style="box-shadow: inset 0 0 10em 5em rgba(" + palette + ", 0.75)")
         div(class="center" style="background-color: rgba(" + palette + ", 0.75)")
             - var _ver = process.version
             div(class="rows")
@@ -20,25 +16,6 @@ html
             div(class="cols")
                 //- video(autoplay='', loop='', muted='')
                     //- source(src='http://i.imgur.com/JqNIMcx.mp4', type='video/mp4')
-                //- h2=weather.dicks()
-                
-                ///HAHAHAH SUCK MY DICK JADE YOU CAN HANDLE FUNCTIONS YOU FUCKING PIECE OF SHIT HAHAHA
-                
-                
-                //- ul
                 div(class="rows")
-                    each val, index in weatherData
+                    each val in measurements
                         p=val
-            //- script.
-            //-     var weather;
-            //-     $.getJSON("./weather.json", function(json) { 
-            //-         //- json.uptime = dhm(json.uptime);
-            //-         weather = JSON.stringify(json, null, "\t").replace(/\"/g, "").slice(3,-2).split(/,\n\t*/).slice(0,-1).join("<br/>")
-            //-         //- var _ts = (new Date(json.timestamp)).toLocaleString().split(", ");
-            //-         //- weather += "<br/>Last updated at " + _ts[1] +", "+_ts[0];
-            //-         }).done(function() {
-            //-         document.getElementById("weather").innerHTML = weather;
-            //-         console.log("json loaded")
-            //-     }).fail(function() {
-            //-         console.log( "Could not load weather data from server.");
-            //-     });

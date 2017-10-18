@@ -3,15 +3,19 @@ Repo to easily modify front-end of raspberry-pi local weather visualization, for
 
 ## TO DO:
 - [ ] Center weather data in CLI browsers
-- [ ] Make the data actually refresh somehow with magical object function passes
-    - [ ] Obviously child-proc has to update local weather object. How to pass changes along though?
+- [x] Make the data actually refresh somehow with magical object function passes
+    - [x] ~~Obviously child-proc has to update local weather object. How to pass changes along though?~~ Module exports are a dream!
 - [ ] Rain effect
     - [ ] Clear background
     - [ ] Actually triggers when raining?
     - [ ] If temp < 32, snow instead
 - [ ] Compress the dang background images with sharp
 - [ ] Embed webm? would be ez with imgur I suppose
-- [ ] Clean up all the string formatter shit into parse-weather with `module.exports`
+- [x] Clean up all the string formatter shit into parse-weather with `module.exports`
+    - [ ] Move dynamic palette shit to parse-weather also
+- [ ] *Incorporate influx*
+    - [ ] Perhaps grafana too, or at least some graphing utility.
+* Perhaps export shit to xlsx? https://www.npmjs.com/package/xlsx
 
 - [ ] *UPDATE THE DANG TUTORIAL THIS SHIT IS SIMPLY INCORRECT NOW*
 
