@@ -4,20 +4,28 @@ Repo to easily modify front-end of raspberry-pi local weather visualization, for
 ## TO DO:
 - [ ] Center weather data in CLI browsers
 - [x] Make the data actually refresh somehow with magical object function passes
-    - [x] ~~Obviously child-proc has to update local weather object. How to pass changes along though?~~ Module exports are a dream!
-- [ ] Rain effect
+    - [x] ~~Obviously child-proc has to update local weather object. How to pass changes along though?~~ ~~Module exports are a dream!~~ Actually they're very convoluted but they keep things compartmentalized.
+- [x] Rain effect
     - [ ] Clear background
     - [ ] Actually triggers when raining?
     - [ ] If temp < 32, snow instead
 - [ ] Compress the dang background images with sharp
-- [ ] Embed webm? would be ez with imgur I suppose
+    - [ ] i GUESS use an <image> for the bg instead of CSS'ing the body so we can support webp
+- [ ] *Embed webm timelapses?*
+    - [ ] Probably just embed from imgur to reduce bandwidth
 - [x] Clean up all the string formatter shit into parse-weather with `module.exports`
     - [ ] Move dynamic palette shit to parse-weather also
-- [ ] *Incorporate influx*
+- [ ] **Incorporate influx** or similar timeseries database since ARM prob not supported
     - [ ] Perhaps grafana too, or at least some graphing utility.
+
 * Perhaps export shit to xlsx? https://www.npmjs.com/package/xlsx
 
-- [ ] *UPDATE THE DANG TUTORIAL THIS SHIT IS SIMPLY INCORRECT NOW*
+- [ ] *Somehow sync the photon code here?*
+- [ ] **LOCAL SPARKSERVER FROM PI SO IT IS THE CENTRAL NERVOUS SYSTEM OF THE ENTIRE FRAMEWORK**
+    - [ ] Update photon locally from pi, removing need for particle api
+        - This part is probably gonna be really f*cking hard since it will probably invalidate particle.js ¯\_(ツ)_/¯
+
+- [ ] **UPDATE THE DANG TUTORIAL THIS SHIT IS SIMPLY INCORRECT NOW**
 
 ## How to replicate:
 
@@ -60,6 +68,3 @@ node server.js # to simply run the server as-is
 ```
 
 * IN THE FUTURE accessing the page should be enough to kick-start all the periodic updates. For right now, you must run `node weather.js` to update anything on the page.
-* Todo:
-    * Add periodic functions
-    * Add photon code to this repository
