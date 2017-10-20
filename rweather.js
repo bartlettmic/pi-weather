@@ -1,4 +1,4 @@
-module.exports = function(callback) {
+// module.exports = function(callback) {
     const fs = require('fs');
     const Particle = require('particle-api-js');
     const particle = new Particle();
@@ -55,4 +55,6 @@ module.exports = function(callback) {
             },
             function(err) { console.log('Unable to update station.', err);
                 callback(err) });
-}
+                
+        function callback(err, data) { console.log(err); console.log(data)}
+// }

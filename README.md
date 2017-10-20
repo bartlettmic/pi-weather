@@ -11,6 +11,7 @@ Repo to easily modify front-end of raspberry-pi local weather visualization, for
     - [ ] If temp < 32, snow instead
 - [ ] Compress the dang background images with sharp
     - [ ] i GUESS use an <image> for the bg instead of CSS'ing the body so we can support webp
+    - [ ] Use generic webcam npm package if raspistill fails
 - [ ] *Embed webm timelapses?*
     - [ ] Probably just embed from imgur to reduce bandwidth
 - [x] Clean up all the string formatter shit into parse-weather with `module.exports`
