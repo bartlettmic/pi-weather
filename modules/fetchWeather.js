@@ -2,7 +2,7 @@ const fs = require('fs');
 const Particle = require('particle-api-js');
 const particle = new Particle();
 const config = require('./config');
-const parse = require('./parse-weather');
+const parse = require('./parseWeather');
 
 module.exports = function(callback) {
     particle.callFunction({
@@ -37,7 +37,7 @@ module.exports = function(callback) {
                 process.stdout.write('\r' + output.timestamp);
                 callback(null, output)
             }).catch((err) => { console.log("Unable to resolve all promises."), callback(err) })
-            
+
         }, (err) => { console.log('Device call failed.', err), callback(err) });
     }, (err) => { console.log('Unable to update station.', err), callback(err) });
 }

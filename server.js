@@ -2,18 +2,26 @@ const fs = require('fs');
 const exp = require('express')
 const schedule = require('node-schedule');
 const vibrant = require('node-vibrant')
-const config = require('./config');
-const weather = require('./weather.js')
-var photonWeatherOutput, palette;
+const modules = require('./modules');
+var photonWeatherOutput, palette, imageChecksum;
 
 var update = function() {
-    weather((err, output) => {
+    modules.fetchWeather((err, output) => {
         if (err) console.log(err)
         else {
             photonWeatherOutput = output;
-            palette = new vibrant(config.imageFileName, {}).getPalette((err, pal) => { palette = getColor(pal) })
+            palette = new vibrant(modules.config.imageFileName, {}).getPalette((err, pal) => { palette = getColor(pal) })
         }
     })
+
+    modules.capturePhoto((err, output) => {
+        if (err) console.log(err)
+        else {
+            //Sharp shit?
+            //  Nah probably do that directly in photo-capture
+            imageChecksum = output;
+        }
+    });
 }
 update()
 
@@ -36,8 +44,9 @@ app.listen(_port, () => { console.log('Listening on ' + _port); });
 //Request -> Response
 app.get('/', function(req, res) {
     res.render('index', {
-        config: config,
+        config: modules.config,
         palette: palette,
+        imageChecksum: imageChecksum,
         measurements: photonWeatherOutput.measurements,
         timestamp: photonWeatherOutput.timestamp,
         uptime: photonWeatherOutput.uptime

@@ -1,0 +1,172 @@
+@import url(https://fonts.googleapis.com/css?family=Lato:100,300);
+
+$image: "https://farm8.staticflickr.com/7238/6880444874_a691311ced_k.jpg";
+
+
+$full-width:   100vw;
+$full-height:  100vh;
+$drop-count:   100;
+
+html, body {
+  height:      $full-height;
+  margin:      0;
+  padding:     0;
+  background:  #333;
+  font-family: "Lato", sans-serif;
+}
+
+.container {
+  position: relative;
+  width:    $full-width;
+  height:   $full-height;
+  overflow: hidden;
+}
+
+.photo {
+  height:              $full-height;
+  width:               $full-width;
+  background:          url($image);
+  background-size:     cover;
+  background-position: 50%;
+}
+
+$window-margin-x: $full-width * 0.15;
+$window-margin-y: $full-height * 0.2;
+$window-width: $full-width - (2 * $window-margin-x);
+$window-height: $full-height - (2 * $window-margin-y);
+
+.window {
+  position:      absolute;
+  z-index:       10;
+  top:           $window-margin-y;
+  left:          $window-margin-x;
+  width:         $window-width;
+  height:        $window-height;
+  overflow:      hidden;
+  border-radius: 20px;
+  .photo {
+    position: absolute;
+    z-index:  20;
+    top:      -$window-margin-y;
+    left:     -$window-margin-x;
+  }
+}
+
+.blurred {
+  filter: blur(12px);
+}
+
+.frosted {
+  position:      relative;
+  background:    #333;
+  height:        100%;
+  opacity:       0.3125;
+  border-radius: 20px;
+}
+
+.rain, .shadows, .drops{
+  position: absolute;
+}
+
+.drop {
+	position:            absolute;
+  border-radius:       100%;
+	background-image:    url($image);
+  background-position: 50%;
+  opacity:             0.5;
+  filter:              blur(0.5px);
+}
+
+.shadow {
+	position:      absolute;
+  z-index:       5;
+	margin-left:   2px; 
+	margin-top:    1px;
+	border-radius: 100%;
+	box-shadow:    0 0 0 2px rgba(0,0,0,0.1);
+}
+
+@for $i from 1 through $drop-count{
+
+  $x:              random();
+  $y:              random();
+  $drop-size:      3px + random(12);
+  $drop-time:      5 + random(24);
+ 	$drop-width:     $drop-size;
+ 	$drop-stretch:   3*$drop-size/$drop-time;
+  $drop-delay:     (random()*50) + 1;
+	$drop-height:    $drop-width+$drop-stretch;
+  
+	.drop:nth-child(#{$i}){
+		left:                $x*$window-width;
+		top:                 $y*$window-height;
+		width:               $drop-width;
+		height:              $drop-height;
+    background-size:     $drop-width $drop-height;
+    background-position: percentage($x) percentage($y);
+    animation:           #{$drop-delay}s streaking infinite;
+	}
+
+	.shadow:nth-child(#{$i}){
+		left:      $x*$window-width;
+		top:       $y*$window-height;
+		width:     $drop-width - 4;
+		height:    $drop-height - 1;
+    animation: #{$drop-delay}s streaking infinite;
+	}
+}
+
+@keyframes streaking {
+  from { 
+    opacity: 0;
+    transform: rotateY(180deg)
+  }
+  5% {
+    opacity: 0.5;
+  }
+  50% {
+    transform: translateY($window-height * 0.25) rotateY(180deg);
+  }
+  to {
+    transform: translateY($window-height) rotateY(180deg);
+  }
+}
+
+.content {
+  position: absolute;
+  margin: 40px;
+  color: white;
+  top: 0;
+  left: 0;
+  height: 100%;
+  opacity: 0.9;
+  
+  .card {
+    display: table-cell;
+    vertical-align: middle;
+    height: 100%;
+  }
+  
+  img.avatar {
+    content: url('http://joshwlewis.com/images/joshwlewis-36466eda.jpg');
+    background-repeat: no-repeat;
+    border-radius: 50%;
+    width: 100px;
+    height: 100px;
+    margin-right: 20px;
+    filter: grayscale(10%);
+  }
+  
+  h1 {
+    display: inline-block;
+    margin: 0;
+    vertical-align: top;
+    line-height: 100px;
+    font-size: 70px;
+    font-weight: 100;
+  }
+  p {
+    margin-left: 120px;
+    font-size: 20px;
+  }
+}
