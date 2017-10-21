@@ -19,8 +19,8 @@ module.exports = function(callback) {
                 promises.push(
                     particle.getVariable({ deviceId: config.ID, name: v, auth: config.token })
                     .then((data) => {
-                        var _trunc;
-                        if (!isNaN(_trunc = (+data.body.result).toFixed(2))) data.body.result = _trunc;
+                        var _trunc = (+data.body.result).toFixed(2);
+                        if (!isNaN(_trunc)) data.body.result = _trunc;
                         return data;
                     }, (err) => { console.log(err), callback(err) })
                 )
