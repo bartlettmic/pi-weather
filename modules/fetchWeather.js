@@ -41,7 +41,7 @@ module.exports = function(callback) {
     }, (err) => { console.log('Unable to update station.', err), callback(err) });
 }
 
-//Helper functions
+//Helper
 function parseWeather(weather) {
     var output = {
         timestamp: parseTimestamp(weather.timestamp),
