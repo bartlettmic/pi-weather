@@ -17,7 +17,7 @@ module.exports = function(callback) {
         var _KB = Buffer.byteLength(buff, 'base64') / 1000;
         process.stdout.write(" " + _KB + "KB ");
         if (_KB > 600) {
-            fs.writeFileSync(config.imageFileName, buff, 'base64')
+            fs.writeFileSync("../img/"+config.imageFileName, buff, 'base64')
             imgur.uploadBase64(buff.toString('base64'), config.imgur.album).then(
                 // (json) => {
                 // console.log(json.data.link)
@@ -27,7 +27,7 @@ module.exports = function(callback) {
             callback(null, checksum(buff))
         } else {
             console.log("-");
-            callback(null, null);
+            callback(null, checksum("static"));
         }
     }, webcamFailsafe(callback))
 }
