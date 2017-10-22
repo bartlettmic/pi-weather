@@ -42,7 +42,6 @@ function saveClientID() {
 }
 
 function webcamFailsafe(callback) {
-    console.log("Pi Camera module failure; using webcam.")
     require("node-webcam").capture(config.imageFileName, {
         quality: 100,
         delay: 0,
