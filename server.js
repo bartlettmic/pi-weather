@@ -10,7 +10,7 @@ var update = function() {
         if (err) console.log(err)
         else {
             photonWeatherOutput = output;
-            palette = new vibrant("./img/"+modules.config.imageFileName, {}).getPalette((err, pal) => { palette = getColor(pal) })
+            palette = new vibrant("./img/" + modules.config.imageFileName, {}).getPalette((err, pal) => { palette = getColor(pal) })
         }
     })
 

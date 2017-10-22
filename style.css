@@ -108,7 +108,7 @@ canvas {
 } */
 
 .underlined {
-    border-bottom: 0.5vh solid black;
+    border-bottom: 0.25vh solid black;
 }
 
 h1 {
@@ -123,5 +123,5 @@ p {
     font-size: 4vmin;
     padding: 0;
     margin: 0;
-    text-transform: capitalize;
+    /* text-transform: capitalize; */
 }

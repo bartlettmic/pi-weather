@@ -17,7 +17,7 @@ module.exports = function(callback) {
         var _KB = Buffer.byteLength(buff, 'base64') / 1000;
         process.stdout.write(" " + _KB + "KB ");
         if (_KB > 600) {
-            fs.writeFileSync("../img/"+config.imageFileName, buff, 'base64')
+            fs.writeFileSync("../img/" + config.imageFileName, buff, 'base64')
             imgur.uploadBase64(buff.toString('base64'), config.imgur.album).then(
                 // (json) => {
                 // console.log(json.data.link)
@@ -47,10 +47,11 @@ function saveClientID() {
 }
 
 function webcamFailsafe(callback) {
-    require("node-webcam").capture(config.imageFileName, {
+    require("node-webcam").capture("./img/" + config.imageFileName, {
         quality: 100,
         delay: 0,
-        saveShots: true,
+        output: "jpeg",
+        saveShots: false,
         callbackReturn: "base64"
     }, (err, buff) => {
         callback(null, checksum((buff || "Error")))

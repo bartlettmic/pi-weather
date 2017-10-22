@@ -1,6 +1,7 @@
 html
     head
         title Lazy B Weather Analytics
+        meta(charset='utf-8')
         meta(http-equiv="refresh", content="60")
         //- script(src="./rain.js")
         style="body { background-image: url(./img/" + config.imageFileName + "?" + imageChecksum + "); }"
@@ -10,7 +11,7 @@ html
         div(class="center" style="background-color: rgba(" + palette + ", 0.75)")
             - var _ver = process.version
             div(class="rows")
-                h1="Using node " + _ver
+                //- h1="Using node " + _ver
                 h1="Updated: " + timestamp
                 h1(class="underlined")="Uptime: " + uptime
             div(class="cols")
