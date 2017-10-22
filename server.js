@@ -54,7 +54,7 @@ app.get('/', function(req, res) {
 });
 
 function getColor(palette) {
-    for (var p in palette) console.log(p)
+    console.log(palette)
     if (palette.LightVibrant) return palette.LightVibrant._rgb.map((c) => { return Math.round(c) }).join(",");
     if (palette.LightMuted) return palette.LightMuted._rgb.map((c) => { return Math.round(c) }).join(",");
     if (palette.Vibrant) return palette.Vibrant._rgb.map((c) => { return Math.round(c) }).join(",");
