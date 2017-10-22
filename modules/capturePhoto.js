@@ -50,6 +50,6 @@ function webcamFailsafe(callback) {
         saveShots: true,
         callbackReturn: "base64"
     }, (err, buff) => {
-        callback(err, checksum(buff))
+        callback(err, checksum((buff || "dicks"))
     })
 }
