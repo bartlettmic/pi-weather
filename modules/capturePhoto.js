@@ -25,7 +25,7 @@ module.exports = function(callback) {
                 callback(null, null);
             }
         })
-        .catch(webcamFailsafe(callback))
+        .catch(console.log(err))
 }
 
 ///////////////////////////////////////////// Helper functions
@@ -50,6 +50,6 @@ function webcamFailsafe(callback) {
         saveShots: true,
         callbackReturn: "base64"
     }, (err, buff) => {
-        callback(err, checksum((buff || "dicks"))
+        callback(err, checksum((buff || "dicks")))
     })
 }
