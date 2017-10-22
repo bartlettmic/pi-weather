@@ -10,7 +10,7 @@ var update = function() {
         if (err) console.log(err)
         else {
             photonWeatherOutput = output;
-            palette = new vibrant(modules.config.imageFileName, {}).getPalette((err, pal) => { palette = getColor(pal) })
+            palette = new vibrant("./img/"+modules.config.imageFileName, {}).getPalette((err, pal) => { palette = getColor(pal) })
         }
     })
 
@@ -54,7 +54,6 @@ app.get('/', function(req, res) {
 });
 
 function getColor(palette) {
-    console.log(palette)
     if (palette.LightVibrant) return palette.LightVibrant._rgb.map((c) => { return Math.round(c) }).join(",");
     if (palette.LightMuted) return palette.LightMuted._rgb.map((c) => { return Math.round(c) }).join(",");
     if (palette.Vibrant) return palette.Vibrant._rgb.map((c) => { return Math.round(c) }).join(",");
