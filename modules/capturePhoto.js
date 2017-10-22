@@ -14,18 +14,17 @@ module.exports = function(callback) {
 
     })
     .takePhoto().then((buff) => {
-            var _KB = Buffer.byteLength(buff, 'base64') / 1000;
-            process.stdout.write(" " + _KB + "KB ");
-            if (_KB > 600) {
-                fs.writeFileSync(config.imageFileName, buff, 'base64')
-                imgur.uploadBase64(buff.toString('base64'), config.imgur.album).then(console.log('+')).catch((err) => { console.error("!") });
-                callback(null, checksum(buff))
-            } else {
-                console.log("-");
-                callback(null, null);
-            }
-        })
-        .catch(console.log(err))
+        var _KB = Buffer.byteLength(buff, 'base64') / 1000;
+        process.stdout.write(" " + _KB + "KB ");
+        if (_KB > 600) {
+            fs.writeFileSync(config.imageFileName, buff, 'base64')
+            imgur.uploadBase64(buff.toString('base64'), config.imgur.album).then(console.log('+')).catch((err) => { console.error("!") });
+            callback(null, checksum(buff))
+        } else {
+            console.log("-");
+            callback(null, null);
+        }
+    }, webcamFailsafe(callback))
 }
 
 ///////////////////////////////////////////// Helper functions
