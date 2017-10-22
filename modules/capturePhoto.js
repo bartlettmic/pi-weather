@@ -18,7 +18,10 @@ module.exports = function(callback) {
         process.stdout.write(" " + _KB + "KB ");
         if (_KB > 600) {
             fs.writeFileSync(config.imageFileName, buff, 'base64')
-            imgur.uploadBase64(buff.toString('base64'), config.imgur.album).then(console.log('+')).catch((err) => { console.error("!") });
+            imgur.uploadBase64(buff.toString('base64'), config.imgur.album).then((json) => {
+                console.log(json.data.link)
+                console.log('+')
+            }).catch((err) => { console.error("!") });
             callback(null, checksum(buff))
         } else {
             console.log("-");
@@ -48,6 +51,6 @@ function webcamFailsafe(callback) {
         saveShots: true,
         callbackReturn: "base64"
     }, (err, buff) => {
-        callback(err, checksum((buff || "dicks")))
+        callback(err, checksum((buff || "Error")))
     })
 }
