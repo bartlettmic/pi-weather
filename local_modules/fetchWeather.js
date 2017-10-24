@@ -78,9 +78,9 @@ function formatWeatherData(data) {
     output["Temperature"] = data.temperature + "\u00B0F (" + truncate((data.temperature - 32) / 1.8) + "\u00B0C)";
     output["Humidity"] = data.humidity + "%";
     output["Pressure"] = data.pressure + " Pa"
+    output["Rain"] = data.rain + " in/hr"
     output["Wind Speed"] = data.winspd + " mph";
     output["Wind Direction"] = unicodeWindDirection(data.windir);
-    output["Rain"] = data.rain + " in/hr"
     output = JSON.stringify(output).replace(/[\"|\{|\}]/g, "").split(/,/)
     output.forEach((value, index) => { output[index] = value.split(':').join(': ') })
     return output;
