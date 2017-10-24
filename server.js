@@ -2,7 +2,7 @@ const fs = require('fs');
 const exp = require('express')
 const schedule = require('node-schedule');
 const vibrant = require('node-vibrant')
-const modules = require('./modules');
+const modules = require('./local_modules');
 var photonWeatherOutput, palette, imageChecksum;
 
 var update = function() {
@@ -10,7 +10,7 @@ var update = function() {
         if (err) console.log(err)
         else {
             photonWeatherOutput = output;
-            palette = new vibrant("./img/" + modules.config.imageFileName, {}).getPalette((err, pal) => { palette = getColor(pal) })
+            palette = new vibrant(modules.config.imageDirectory + modules.config.imageFileName, {}).getPalette((err, pal) => { palette = getColor(pal) })
         }
     })
 
@@ -29,9 +29,9 @@ update()
 setInterval(update, 300000)
 
 const app = exp();
-app.set('views', './');
+app.set('views', modules.config.publicDirectory);
 app.set('view engine', 'pug');
-app.use(exp.static('./'))
+app.use(exp.static(modules.config.publicDirectory))
 
 // schedule.scheduleJob('*/1 * * * *', () => {
 

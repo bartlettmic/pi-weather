@@ -4,14 +4,12 @@ html
         meta(charset='utf-8')
         meta(http-equiv="refresh", content="300")
         //- script(src="./rain.js")
-        style="body { background-image: url(./img/" + config.imageFileName + "?" + imageChecksum + "); }"
+        style="body { background-image: url(./" + config.imageFileName + "?" + imageChecksum + "); }"
         link(rel="stylesheet", href="/style.css")        
     body
         canvas(id="container")
         div(class="center" style="background-color: rgba(" + palette + ", 0.75)")
-            - var _ver = process.version
             div(class="rows")
-                //- h1="Using node " + _ver
                 h1="Updated: " + timestamp
                 h1(class="underlined")="Uptime: " + uptime
             div(class="cols")
