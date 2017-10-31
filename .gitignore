@@ -6,6 +6,7 @@ weather.json
 md5
 *.save
 nohup.out
+prometheus/*
 
 
 # Logs
