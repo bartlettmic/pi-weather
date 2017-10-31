@@ -1,6 +1,7 @@
 const fs = require('fs');
 const Particle = require('particle-api-js');
 const particle = new Particle();
+const cp = require('child_process');
 const config = require('./config');
 
 module.exports = function(callback) {
@@ -31,6 +32,11 @@ module.exports = function(callback) {
                 output.timestamp = Date.now();
                 output.rain *= 0.011;
                 fs.writeFileSync(config.publicDirectory + 'weather.json', JSON.stringify(output, null, "\t"), 'utf8');
+
+		cp.exec('echo "temperature ' + output.temperature + '" | curl --data-binary @- http://localhost:9091/metrics/job/weather')
+		cp.exec('echo "humidity ' + output.humidity + '" | curl --data-binary @- http://localhost:9091/metrics/job/weather')
+		cp.exec('echo "pressure ' + output.pressure + '" | curl --data-binary @- http://localhost:9091/metrics/job/weather')
+
                 output = parseWeather(output)
                     // for (var v of Object.getOwnPropertyNames(output)) {}
                 process.stdout.write('\r' + output.timestamp);
