@@ -6,13 +6,15 @@ const modules = require('./local_modules');
 var photonWeatherOutput, palette, imageChecksum;
 
 var update = function() {
-    modules.fetchWeather((err, output) => {
-        if (err) console.log(err)
-        else {
-            photonWeatherOutput = output;
-            palette = new vibrant(modules.config.imageDirectory + modules.config.imageFileName, {}).getPalette((err, pal) => { palette = getColor(pal) })
-        }
-    })
+    	try {
+	modules.fetchWeather((err, output) => {
+	        if (err) console.log(err)
+	        else {
+	            photonWeatherOutput = output;
+            	try { palette = new vibrant(modules.config.imageDirectory + modules.config.imageFileName, {}).getPalette((err, pal) => { palette = getColor(pal) }) } catch (e) {};
+        	}
+    	})
+	} catch(e) {}
 
     modules.capturePhoto((err, output) => {
         if (err) console.log(err)
@@ -22,6 +24,7 @@ var update = function() {
             imageChecksum = output;
         }
     });
+
 }
 update()
 

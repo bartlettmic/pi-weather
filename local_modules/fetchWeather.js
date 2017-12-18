@@ -5,6 +5,14 @@ const cp = require('child_process');
 const config = require('./config');
 
 module.exports = function(callback) {
+
+    try {
+	var outTemp = JSON.parse(cp.execSync('curl https://api.particle.io/v1/devices/31001d001647343337363432/baroTemp?access_token=ab3e0bb7c384847246e3c8276afa54adbf5971f4'));
+	cp.execSync('echo "outside ' + outTemp.result + '" | curl --data-binary @- http://localhost:9091/metrics/job/weather');
+	var wind = JSON.parse(cp.execSync('curl https://api.particle.io/v1/devices/31001d001647343337363432/wind?access_token=ab3e0bb7c384847246e3c8276afa54adbf5971f4'));
+    	cp.execSync('echo "outwind ' + wind.result + '" | curl --data-binary @- http://localhost:9091/metrics/job/weather');
+    } catch(e) {}
+
     particle.callFunction({
         deviceId: config.ID,
         auth: config.token,
@@ -27,20 +35,22 @@ module.exports = function(callback) {
             }
 
             Promise.all(promises).then(values => {
-                var output = {};
+                try {
+		var output = {};
                 for (var v of values) output[v.body.name] = v.body.result;
                 output.timestamp = Date.now();
                 output.rain *= 0.011;
                 fs.writeFileSync(config.publicDirectory + 'weather.json', JSON.stringify(output, null, "\t"), 'utf8');
 
 		cp.exec('echo "temperature ' + output.temperature + '" | curl --data-binary @- http://localhost:9091/metrics/job/weather')
-		cp.exec('echo "humidity ' + output.humidity + '" | curl --data-binary @- http://localhost:9091/metrics/job/weather')
-		cp.exec('echo "pressure ' + output.pressure + '" | curl --data-binary @- http://localhost:9091/metrics/job/weather')
+                cp.exec('echo "humidity ' + output.humidity + '" | curl --data-binary @- http://localhost:9091/metrics/job/weather')
+                cp.exec('echo "pressure ' + output.pressure + '" | curl --data-binary @- http://localhost:9091/metrics/job/weather')
 
                 output = parseWeather(output)
                     // for (var v of Object.getOwnPropertyNames(output)) {}
                 process.stdout.write('\r' + output.timestamp);
                 callback(null, output)
+		} catch (e) {}
             }).catch((err) => { console.log("Unable to resolve all promises."), callback(err) })
 
         }, (err) => { console.log('Device call failed.', err), callback(err) });

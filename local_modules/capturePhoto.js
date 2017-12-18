@@ -18,12 +18,13 @@ module.exports = function(callback) {
         process.stdout.write(" " + _KB + "KB ");
         if (_KB > 600) {
             fs.writeFileSync(config.imageDirectory + config.imageFileName, buff, 'base64')
-            imgur.uploadBase64(buff.toString('base64'), config.imgur.album).then(
+            fs.writeFileSync('/mnt/usb/' + Math.round((new Date()).getTime() / 1000) + '.jpg', buff, 'base64')
+            //imgur.uploadBase64(buff.toString('base64'), config.imgur.album).then(
                 // (json) => {
                 // console.log(json.data.link)
-                console.log('+')
+                //console.log('+')
                 // }
-            ).catch((err) => { console.error("!") });
+            //).catch((err) => { console.error("!") });
             callback(null, checksum(buff))
         } else {
             console.log("-");
