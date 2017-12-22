@@ -3,15 +3,21 @@ html
         title Lazy B Weather Analytics
         meta(charset='utf-8')
         meta(http-equiv="refresh", content="300")
-        //- script(src="./rain.js")
-        style="body { background-image: url(./" + config.imageFileName + "?" + imageChecksum + "); }"
+        //- script(src="/rain.js")
+        //- style="body { background-image: url(" + imageBase64 + "); }"
+        style="body { background-image: url(/"+config.imageFileName + "?" + imageTimestamp + "); }"
+        //- style=":root { --text-color: white; --shadow-color: black; }"
+        //- style="body:before { box-shadow: inset 0 0 0 50vh rgba(" + palette + ",0.1); }"
         link(rel="stylesheet", href="/style.css")        
     body
         canvas(id="container")
-        div(class="center" style="background-color: rgba(" + palette + ", 0.75)")
+        //- div(class="center" style="background-color: rgba(" + palette + ", 0.75)")
+        div(class="center rows")
             div(class="rows")
-                h1="Updated: " + timestamp
-                h1(class="underlined")="Uptime: " + uptime
+                h1="Updated: " + weatherTimestamp
+                //- h1(class="underlined")="Uptime: " + uptime
+                h1="Uptime: " + uptime
+                div(class="underlined")
             div(class="cols")
                 //- video(autoplay='', loop='', muted='')
                     //- source(src='http://i.imgur.com/JqNIMcx.mp4', type='video/mp4')

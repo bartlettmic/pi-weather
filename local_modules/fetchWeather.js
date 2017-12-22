@@ -8,12 +8,13 @@ module.exports = function(callback) {
         deviceId: config.ID,
         auth: config.token,
         name: 'update',
-        argument: '' //Update this if we ever need conditional results, maybe sleep?
-    }).then((data) => {
+        argument: '' //Update this if we ever need conditional results, maybe sleep time?
+    })
+    .then((data) => {
         process.stdout.write('Fetching... ');
         particle.getDevice({ deviceId: config.ID, auth: config.token }).then((data) => {
             var promises = [];
-
+            
             for (var v of Object.getOwnPropertyNames(data.body.variables)) {
                 promises.push(
                     particle.getVariable({ deviceId: config.ID, name: v, auth: config.token })
@@ -21,11 +22,12 @@ module.exports = function(callback) {
                         var _trunc = truncate(data.body.result);
                         if (!isNaN(_trunc)) data.body.result = _trunc;
                         return data;
-                    }, (err) => { console.log(err), callback(err) })
+                    }, (err) => { console.log(err), callback(null, err) })
                 )
             }
 
-            Promise.all(promises).then(values => {
+            Promise.all(promises)
+            .then(values => {
                 var output = {};
                 for (var v of values) output[v.body.name] = v.body.result;
                 output.timestamp = Date.now();
@@ -34,11 +36,12 @@ module.exports = function(callback) {
                 output = parseWeather(output)
                     // for (var v of Object.getOwnPropertyNames(output)) {}
                 process.stdout.write('\r' + output.timestamp);
-                callback(null, output)
-            }).catch((err) => { console.log("Unable to resolve all promises."), callback(err) })
+                callback(output)
+            })
+            .catch((err) => { console.log("Unable to resolve all promises."), callback(null, err) })
 
-        }, (err) => { console.log('Device call failed.', err), callback(err) });
-    }, (err) => { console.log('Unable to update station.', err), callback(err) });
+        }, (err) => { console.log('Device call failed.', err), callback(null, err) });
+    }, (err) => { console.log('Unable to update station.', err), callback(null, err) });
 }
 
 //Helper

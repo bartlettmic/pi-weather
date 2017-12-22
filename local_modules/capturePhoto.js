@@ -1,59 +1,56 @@
 const fs = require('fs');
-const crypto = require('crypto');
-const imgur = require('imgur');
 const config = require('./config');
+const DARK_IMAGE_SIZE_FILTER_THRESHOLD = 600//KB
+const IMAGE_HEIGHT = 1080;
+const IMAGE_WIDTH = 1920;
 
-imgur.setCredentials(config.imgur.username, config.imgur.password, (config.imgur.client || saveClientID()));
+// imgur.setCredentials(config.imgur.username, config.imgur.password, (config.imgur.client || saveClientID()));
 
 module.exports = function(callback) {
     new(require('node-raspistill').Raspistill)({
 
         noFileSave: true,
-        width: 1920,
-        height: 1080,
+        width: IMAGE_WIDTH,
+        height: IMAGE_HEIGHT,
 
     })
-    .takePhoto().then((buff) => {
-        var _KB = Buffer.byteLength(buff, 'base64') / 1000;
-        process.stdout.write(" " + _KB + "KB ");
-        if (_KB > 600) {
-            fs.writeFileSync(config.imageDirectory + config.imageFileName, buff, 'base64')
-            imgur.uploadBase64(buff.toString('base64'), config.imgur.album).then(
-                // (json) => {
-                // console.log(json.data.link)
-                console.log('+')
-                // }
-            ).catch((err) => { console.error("!") });
-            callback(null, checksum(buff))
-        } else {
-            console.log("-");
-            callback(null, checksum("static"));
-        }
-    }, webcamFailsafe(callback))
+    .takePhoto().then((buff) => {filterDarkImagesAndSave(buff, callback); }, webcamFailsafe(callback) )
 }
 
 ///////////////////////////////////////////// Helper functions
-function checksum(str, algorithm, encoding) {
-    return crypto
-        .createHash(algorithm || 'md5')
-        .update(str, 'base64')
-        .digest(encoding || 'hex')
-}
-
-function saveClientID() {
-    config.imgur.client = imgur.getClientId()
-    fs.writeFileSync('config.json', JSON.stringify(config, null, "\t"), 'utf8');
-    return config.imgur.client
+function filterDarkImagesAndSave(buffBase64, callback) {
+    var KB = Buffer.byteLength(buffBase64, 'base64') / 1000;
+    process.stdout.write(" " + KB + "KB");
+    if (KB > DARK_IMAGE_SIZE_FILTER_THRESHOLD) {
+        var timestamp = (new Date()).getTime()
+       try {
+        fs.writeFileSync(config.publicDirectory + config.imageFileName, buffBase64, 'base64')
+        if (config.imageDirectory) fs.writeFileSync(`${config.imageDirectory}${Math.round(timestamp / 1000)}.${config.imageExt}`, buffBase64, 'base64')
+       } catch(e) {}
+        process.stdout.write("+");
+        callback(timestamp);
+    } 
+    else {
+        process.stdout.write("-");
+        callback(-1)
+    }
 }
 
 function webcamFailsafe(callback) {
-    require("node-webcam").capture(config.imageDirectory + config.imageFileName, {
+    require("node-webcam").capture("", {
+        width: IMAGE_WIDTH,
+        height: IMAGE_HEIGHT,
         quality: 100,
         delay: 0,
         output: "jpeg",
         saveShots: false,
         callbackReturn: "base64"
-    }, (err, buff) => {
-        callback(null, checksum((buff || "Error")))
+    }, (err, URI) => { 
+        if (err) callback(null, err)
+        else filterDarkImagesAndSave(URItoBase64(URI), callback)   
     })
+}
+
+function URItoBase64(URI) {
+    return (new Buffer(URI.substring(URI.indexOf('base64') + 7), 'base64'))
 }

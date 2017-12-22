@@ -1,29 +1,40 @@
+#!node
 const fs = require('fs');
 const exp = require('express')
 const schedule = require('node-schedule');
 const vibrant = require('node-vibrant')
 const modules = require('./local_modules');
-var photonWeatherOutput, palette, imageChecksum;
+var photonWeatherOutput, 
+palette = "158,197,216", 
+imageTimestamp = (new Date()).getTime();
+
+modules.config.imageExt = modules.config.imageFileName.split('.').slice(-1); //Get extension of image from filename, e.g. jpg
 
 var update = function() {
-    modules.fetchWeather((err, output) => {
+     modules.fetchWeather((output, err) => {
         if (err) console.log(err)
         else {
-            photonWeatherOutput = output;
-            palette = new vibrant(modules.config.imageDirectory + modules.config.imageFileName, {}).getPalette((err, pal) => { palette = getColor(pal) })
+            photonWeatherOutput = output;            
         }
     })
 
-    modules.capturePhoto((err, output) => {
+    modules.capturePhoto((timestamp, err) => {
         if (err) console.log(err)
         else {
             //Sharp shit?
             //  Nah probably do that directly in photo-capture
-            imageChecksum = output;
+            if (timestamp > 0) {
+                imageTimestamp = timestamp;
+                palette = new vibrant(modules.config.publicDirectory + modules.config.imageFileName, {}).getPalette((err, pal) => { 
+                    try { palette = getColor(pal) } catch(e) { palette = "158,197,216" };
+                })
+            }
+            
+            console.log()
         }
     });
 }
-update()
+update();
 
 // setInterval(update, 60000)
 setInterval(update, 300000)
@@ -46,17 +57,25 @@ app.get('/', function(req, res) {
     res.render('index', {
         config: modules.config,
         palette: palette,
-        imageChecksum: imageChecksum,
+        imageTimestamp: imageTimestamp,        
         measurements: photonWeatherOutput.measurements,
-        timestamp: photonWeatherOutput.timestamp,
+        weatherTimestamp: photonWeatherOutput.timestamp,
         uptime: photonWeatherOutput.uptime
     });
 });
 
 function getColor(palette) {
-    if (palette.LightVibrant) return palette.LightVibrant._rgb.map((c) => { return Math.round(c) }).join(",");
-    if (palette.LightMuted) return palette.LightMuted._rgb.map((c) => { return Math.round(c) }).join(",");
-    if (palette.Vibrant) return palette.Vibrant._rgb.map((c) => { return Math.round(c) }).join(",");
-    if (palette.Muted) return palette.Muted._rgb.map((c) => { return Math.round(c) }).join(",");
-    // if (palette.DarkMuted) return palette.DarkMuted._rgb.map((c) => { return Math.round(c) }).join(",");
+    var palettes = ['LightVibrant','LightMuted','Vibrant','Muted','DarkMuted']
+    for (var pal of palettes) {
+    try {
+        return palette[pal]._rgb.map((c) => { return Math.round(c) }).join(",")
+    } catch(e) {}
+}
+
+// if (palette.LightVibrant) return palette.LightVibrant._rgb.map((c) => { return Math.round(c) }).join(",");
+// if (palette.LightMuted) return palette.LightMuted._rgb.map((c) => { return Math.round(c) }).join(",");
+// if (palette.Vibrant) return palette.Vibrant._rgb.map((c) => { return Math.round(c) }).join(",");
+// if (palette.Muted) return palette.Muted._rgb.map((c) => { return Math.round(c) }).join(",");
+// if (palette.DarkMuted) return palette.DarkMuted._rgb.map((c) => { return Math.round(c) }).join(",");
+
 }
