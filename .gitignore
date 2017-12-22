@@ -1,12 +1,10 @@
 #pictures taken
 *.jpg
 *.png
+*.save
 config.json
 weather.json
-md5
-*.save
 nohup.out
-prometheus/*
 
 
 # Logs
