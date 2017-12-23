@@ -1,43 +1,52 @@
-const fs = require('fs');
-const config = require('./config');
-const DARK_IMAGE_SIZE_FILTER_THRESHOLD = 600//KB
+const imageManipulator = require("jimp");
+
+const DARK_IMAGE_SIZE_THRESHOLD = 600 //KB
 const IMAGE_HEIGHT = 1080;
 const IMAGE_WIDTH = 1920;
 
-// imgur.setCredentials(config.imgur.username, config.imgur.password, (config.imgur.client || saveClientID()));
+var config = {};
 
-module.exports = function(callback) {
-    new(require('node-raspistill').Raspistill)({
-
-        noFileSave: true,
-        width: IMAGE_WIDTH,
-        height: IMAGE_HEIGHT,
-
-    })
-    .takePhoto().then((buff) => {filterDarkImagesAndSave(buff, callback); }, webcamFailsafe(callback) )
+module.exports = function(_config) {
+    config = _config;
+    return tryRaspiStill
 }
 
 ///////////////////////////////////////////// Helper functions
-function filterDarkImagesAndSave(buffBase64, callback) {
+function tryRaspiStill(callback) {
+    new(require('node-raspistill').Raspistill)({
+        noFileSave: true,
+        width: IMAGE_WIDTH,
+        height: IMAGE_HEIGHT,
+    })
+    .takePhoto()
+    .then((buff) => { curateAndSaveImage(buff, callback); }, webcamFallback(callback))
+}
+    
+function curateAndSaveImage(buffBase64, callback) {
     var KB = Buffer.byteLength(buffBase64, 'base64') / 1000;
     process.stdout.write(" " + KB + "KB");
-    if (KB > DARK_IMAGE_SIZE_FILTER_THRESHOLD) {
-        var timestamp = (new Date()).getTime()
-       try {
-        fs.writeFileSync(config.publicDirectory + config.imageFileName, buffBase64, 'base64')
-        if (config.imageDirectory) fs.writeFileSync(`${config.imageDirectory}${Math.round(timestamp / 1000)}.${config.imageExt}`, buffBase64, 'base64')
-       } catch(e) {}
+    if (KB > DARK_IMAGE_SIZE_THRESHOLD) {
+        var timestamp = Math.round((new Date()).getTime() / 1000)
+        try {
+            imageManipulator.read(buffBase64, (err, image) => {
+                if (err) callback(err)
+                else {
+                    //Preserve unmodified image if config specified a directory
+                    if (config.snapshot.timelapseDirectory) image.write(`${config.snapshot.timelapseDirectory}${timestamp}.${image.getExtension()}`);
+                    image.resize(IMAGE_WIDTH / 4, IMAGE_HEIGHT / 4).write(config.publicDirectory + config.snapshot.fileName, callback)
+                }
+            })
+        } catch (e) {}
         process.stdout.write("+");
-        callback(timestamp);
-    } 
-    else {
+        callback(null, timestamp);
+    } else {
         process.stdout.write("-");
-        callback(-1)
+        callback(null, -1)
     }
 }
 
-function webcamFailsafe(callback) {
-    require("node-webcam").capture("", {
+function webcamFallback(callback) {
+    require("node-webcam").capture("\\", {
         width: IMAGE_WIDTH,
         height: IMAGE_HEIGHT,
         quality: 100,
@@ -45,9 +54,9 @@ function webcamFailsafe(callback) {
         output: "jpeg",
         saveShots: false,
         callbackReturn: "base64"
-    }, (err, URI) => { 
-        if (err) callback(null, err)
-        else filterDarkImagesAndSave(URItoBase64(URI), callback)   
+    }, (err, URI) => {
+        if (err) callback(err)
+        else curateAndSaveImage(URItoBase64(URI), callback)
     })
 }
 

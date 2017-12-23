@@ -1,13 +1,13 @@
 html
     head
-        title Lazy B Weather Analytics
+        title Local Weather Analytics
         meta(charset='utf-8')
         meta(http-equiv="refresh", content="300")
         //- script(src="/rain.js")
         //- style="body { background-image: url(" + imageBase64 + "); }"
-        style="body { background-image: url(/"+config.imageFileName + "?" + imageTimestamp + "); }"
+        style="body { background-image: url(/"+imageFileName + "?" + imageTimestamp + "); }"
         //- style=":root { --text-color: white; --shadow-color: black; }"
-        //- style="body:before { box-shadow: inset 0 0 0 50vh rgba(" + palette + ",0.1); }"
+        style="body:before { box-shadow: inset 0 0 100vw 100vw rgba(" + palette + ",0.2); }"
         link(rel="stylesheet", href="/style.css")        
     body
         canvas(id="container")

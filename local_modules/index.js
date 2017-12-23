@@ -1,11 +1,17 @@
 const path = require("path");
+// const config = require("../config.json")
 
 var currentDir = path.join(__dirname);
 var currentFile = path.basename(__filename)
-var _export = {};
 
-require("fs").readdirSync(currentDir).forEach((file) => {
-    if (file != currentFile) _export[file.split('.')[0]] = require("./" + file)
-});
-
-module.exports = _export;
+module.exports = function(config) {
+    var payload = {};
+    require("fs").readdirSync(currentDir).forEach((file) => {
+        if (file != currentFile) {
+            var _module = require("./" + file)(config);
+            _module.config = config;
+            payload[file.split('.')[0]] = _module;
+        }
+    });
+    return payload;
+}
