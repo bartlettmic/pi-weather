@@ -1,13 +1,12 @@
 const fs = require('fs');
 const Particle = require('particle-api-js');
-const hoard = require('hoard');
 
 const particle = new Particle();
 
-var config = {};
+var config = { particle: {}, publicDirectory:"" };
 
 module.exports = function(_config) {
-    config = _config;
+    for (var p of Object.keys(config)) config[p]=_config[p]
     return scrapeWeather
 }
 
@@ -20,7 +19,7 @@ function scrapeWeather(callback) {
         argument: '' //Update this if we ever need conditional results, maybe sleep time?
     })
     .then((data) => {
-        process.stdout.write('Fetching... ');
+        process.stdout.write('Collecting... ');
         particle.getDevice({ deviceId: config.particle.ID, auth: config.particle.token }).then((data) => {
             var promises = [];
             
@@ -41,9 +40,9 @@ function scrapeWeather(callback) {
                 output.timestamp = Date.now();
                 output.rain *= 0.011;
                 fs.writeFileSync(config.publicDirectory + 'weather.json', JSON.stringify(output, null, "\t"), 'utf8');
-                output = parseWeather(output)
-                    // for (var v of Object.getOwnPropertyNames(output)) {}
-                process.stdout.write('\r' + output.timestamp);
+                output = { pretty: parseWeather(output), json: output }
+                process.stdout.write('\r' + output.pretty.timestamp);
+                // for (var v of Object.getOwnPropertyNames(output)) {}
                 callback(null, output)
             })
             .catch((err) => { console.log("Unable to resolve all promises."), callback(err) })

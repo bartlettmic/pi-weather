@@ -35,7 +35,7 @@ body:before {
     top: var(--stretch);
     bottom: var(--stretch);
     --blur-amount: blur(8px);
-    /* box-shadow: inset 0 0 100vw 100vw rgba(255, 255, 255,0.2); */
+    box-shadow: inset 0 0 100vw 100vw rgba(255, 255, 255,0.2);
     /* background-color: white; */
     filter: var(--blur-amount);
     -moz-filter: var(--blur-amount);

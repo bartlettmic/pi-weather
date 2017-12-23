@@ -19,7 +19,6 @@
   "homepage": "https://github.com/bartlettmic/pi-weather#readme",
   "dependencies": {
     "express": "^4.15.4",
-    "hoard": "^0.1.5",
     "imgur": "^0.2.1",
     "jimp": "^0.2.28",
     "md5": "^2.2.1",

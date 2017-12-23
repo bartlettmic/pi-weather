@@ -9,7 +9,6 @@ module.exports = function(config) {
     require("fs").readdirSync(currentDir).forEach((file) => {
         if (file != currentFile) {
             var _module = require("./" + file)(config);
-            _module.config = config;
             payload[file.split('.')[0]] = _module;
         }
     });

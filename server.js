@@ -13,10 +13,14 @@ var photonWeatherOutput = { measurements: null, timestamp: null, uptime: null },
     palette = "158,197,216",
     imageTimestamp = (new Date()).getTime();
 
+//Make this into a module
 var update = function() {
-    modules.fetchWeather((err, output) => {
+    modules.collectWeather((err, output) => {
         if (err) console.log(err)
-        else photonWeatherOutput = output;
+        else {
+            photonWeatherOutput = output.pretty;
+            modules.storeWeather(output.json, (err) => { if (err) console.log(err)});
+        }
     })
 
     modules.capturePhoto((err, timestamp) => {
@@ -34,7 +38,7 @@ var update = function() {
 }
 update();
 
-setInterval(update, config.refreshRate)
+setInterval(update, config.updateRate)
 
 const app = exp();
 app.set('views', config.publicDirectory);
@@ -61,6 +65,7 @@ app.get('/', function(req, res) {
     });
 });
 
+//Put this in capturePhoto
 function getColor(palette) {
     var palettes = ['LightVibrant', 'LightMuted', 'Vibrant', 'Muted', 'DarkMuted']
     for (var pal of palettes) {

@@ -28,6 +28,8 @@ Repo to easily modify front-end of raspberry-pi local weather visualization, for
 
 - [ ] **UPDATE THE DANG TUTORIAL THIS SHIT IS SIMPLY INCORRECT NOW**
 
+#### Useful line: http://www.erol.si/2015/01/the-complete-list-of-all-timeseries-databases-for-your-iot-project/
+
 ## How to replicate:
 
 * First, choose what sort stack you want

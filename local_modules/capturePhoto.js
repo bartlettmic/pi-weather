@@ -4,10 +4,10 @@ const DARK_IMAGE_SIZE_THRESHOLD = 600 //KB
 const IMAGE_HEIGHT = 1080;
 const IMAGE_WIDTH = 1920;
 
-var config = {};
+var config = { snapshot: {}, publicDirectory:"" };
 
 module.exports = function(_config) {
-    config = _config;
+    for (var p of Object.keys(config)) config[p]=_config[p]
     return tryRaspiStill
 }
 
