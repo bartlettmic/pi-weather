@@ -5,42 +5,44 @@ const particle = new Particle();
 var config = { particle: {}, weather: {}, server: {} };
 
 module.exports = function(_config) {
-    for (var p of Object.keys(config)) config[p]=_config[p]
+    for (var p of Object.keys(config)) config[p] = _config[p]
     return scrapeWeather
 }
 
 //Helper
-function scrapeWeather(callback) {
-    particle.callFunction({
-        deviceId: config.particle.ID,
-        auth: config.particle.token,
-        name: 'update',
-        argument: '' //Update this if we ever need conditional results, maybe sleep time?
-    })
-    .then((data) => {
-        particle.getDevice({ deviceId: config.particle.ID, auth: config.particle.token }).then((data) => {
-            var promises = [];
-            
-            for (var v of Object.getOwnPropertyNames(data.body.variables)) {
-                promises.push(
-                    particle.getVariable({ deviceId: config.particle.ID, name: v, auth: config.particle.token })
-                    .then((data) => {
-                        if (!isNaN(data.body.result)) data.body.result = truncate(data.body.result);
-                        return data;
-                    }, err => { console.log(err), callback(err) })
-                )
-            }
-
-            Promise.all(promises).then(values => {
-                var output = {};
-                for (var v of values) output[v.body.name] = v.body.result;
-                output = { measurements: output, timestamp: Date.now() }
-                callback(null, { pretty: prettifyWeather(output), json: output })
+function scrapeWeather() {
+    return new Promise((resolve, reject) => {
+        particle.callFunction({
+                deviceId: config.particle.ID,
+                auth: config.particle.token,
+                name: 'update',
+                argument: '' //Update this if we ever need conditional results, maybe sleep time?
             })
-            .catch(err => { console.log("Unable to resolve all promises."), callback(err) })
+            .then((data) => {
+                particle.getDevice({ deviceId: config.particle.ID, auth: config.particle.token }).then((data) => {
+                    var promises = [];
 
-        }, err => { console.log('Device call failed.', err), callback(err) });
-    }, err => { console.log('Unable to update station.', err), callback(err) });    
+                    for (var v of Object.getOwnPropertyNames(data.body.variables)) {
+                        promises.push(
+                            particle.getVariable({ deviceId: config.particle.ID, name: v, auth: config.particle.token })
+                            .then((data) => {
+                                if (!isNaN(data.body.result)) data.body.result = truncate(data.body.result);
+                                return data;
+                            }, err => { console.log(err), reject(err) })
+                        )
+                    }
+
+                    Promise.all(promises).then(values => {
+                            var output = {};
+                            for (var v of values) output[v.body.name] = v.body.result;
+                            output = { measurements: output, timestamp: Date.now() }
+                            resolve({ pretty: prettifyWeather(output), json: output })
+                        })
+                        .catch(err => { console.log("Unable to resolve all promises."), reject(err) })
+
+                }, err => { console.log('Device call failed.', err), reject(err) });
+            }, err => { console.log('Unable to update station.', err), reject(err) });
+    })
 }
 
 function prettifyWeather(weather) {
@@ -79,7 +81,7 @@ function prettifyMeasurements(data) {
     var output = {}
     output["Temperature"] = data.temperature + "\u00B0F (" + truncate((data.temperature - 32) / 1.8) + "\u00B0C)";
     output["Humidity"] = data.humidity + "%";
-    output["Pressure"] = truncate(data.pressure/100) + " hPa"
+    output["Pressure"] = truncate(data.pressure / 100) + " hPa"
     output["Rain"] = data.rain + " in/hr"
     output["Wind Speed"] = data.windspd + " mph";
     output["Wind Direction"] = unicodeWindDirection(data.winddir);

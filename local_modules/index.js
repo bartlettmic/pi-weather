@@ -1,7 +1,9 @@
-const vibrant = require('node-vibrant')
-
 const expectedModules = [
-    "server", "collectWeather", "storeWeather", "capturePhoto", "graphData"
+    "server",
+    "collectWeather",
+    "storeWeather",
+    "capturePhoto",
+    "graphData"
 ];
 
 var modules = {};
@@ -10,38 +12,29 @@ module.exports = function(config) {
     expectedModules.forEach(module => { modules[module] = require(`./${module}`)(config); })
     return function update() {
         // process.stdout.write('\rUpdating...\r');
-        modules.capturePhoto((err, payload) => {
-            console.log(payload)
-            if (err) console.log('-')
-            else {
-                // if (saved) {
-                console.log('+')
-                palette = new vibrant(config.server.staticDirectory + config.snapshot.fileName, {}).getPalette((err, pal) => {
-                    try {
-                        modules.server({ image: { timestamp: timestamp, palette: getColor(pal) } });
-                    } catch (e) {
-                        modules.server({ image: { timestamp: timestamp, palette: "158,197,216" } });
-                    };
-                })
-            }
-            // process.stdout.write(` ${size}KB${saved ? '+' : '-'}\n`);
-            // }
-        });
 
-        modules.collectWeather((err, output) => {
-            if (err) console.log(err)
-            else {
-                modules.server({ weather: output });
+        modules.capturePhoto()
+            .then(payload => {
+                if (payload.timestamp < 0) console.log('-')
+                else {
+                    console.log('+')
+                    modules.server({ image: payload })
+                }
+            })
+            .catch(err => console.log("Photo error", err))
 
-                modules.storeWeather(output.json, (err, history) => {
+        modules.collectWeather()
+            .then(payload => {
+                modules.server({ weather: payload });
+
+                modules.storeWeather(payload.json, (err, history) => {
                     if (err) console.log(err)
 
                     //Generate new graphs
 
                 });
-                process.stdout.write(output.pretty.timestamp)
-            }
-        })
+                process.stdout.write(payload.pretty.timestamp)
+            })
     }
 }
 

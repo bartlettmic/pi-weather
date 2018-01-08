@@ -1,4 +1,6 @@
 const imageManipulator = require("jimp");
+// const vibrant = require('node-vibrant')
+
 const DARK_IMAGE_SIZE_THRESHOLD = 600 //KB
     // const config.snapshot.height = 1080;
     // const config.snapshot.width = 1920;
@@ -6,41 +8,33 @@ const DARK_IMAGE_SIZE_THRESHOLD = 600 //KB
 var config = { snapshot: {}, server: {} };
 var filePath = "";
 
-// const raspistill = require('node-raspistill').Raspistill
-// const camera = new raspistill({
-//     noFileSave: true,
-//     width: config.snapshot.width,
-//     height: config.snapshot.height,
-//     time: 0,
-// });
+const raspistill = require('node-raspistill').Raspistill
+const camera = new raspistill({
+    noFileSave: true,
+    width: config.snapshot.width,
+    height: config.snapshot.height,
+    time: 0,
+});
 
-const PiCamera = require('pi-camera');
-var camera
+const defaultReturn = { timestamp: -1, palette: config.snapshot.defaultPalette }
 
 module.exports = function(_config) {
     for (var p of Object.keys(config)) config[p] = _config[p]
     filePath = config.server.staticDirectory + config.snapshot.fileName
-
-    camera = new PiCamera({
-        mode: 'photo',
-        output: config.server.staticDirectory + 'tmp.jpg',
-        width: config.snapshot.width,
-        height: config.snapshot.height,
-        nopreview: true,
-    });
-
     return tryRaspiStill
 }
 
 ///////////////////////////////////////////// Helper functions
 function tryRaspiStill(callback) {
-    // camera.takePhoto()
-    camera.snap()
-        .then(buff => {
-            console.log(buff)
-            callback(null, curateAndSaveImage(buff))
-        })
-        .catch(err => callback)
+    return new Promise((resolve, reject) => {
+        // camera.takePhoto()
+        camera.takePhoto()
+            .then(buff => {
+                console.log(buff)
+                resolve({ image: curateAndSaveImage(buff) })
+            })
+            .catch(err => resolve(defaultReturn))
+    })
 }
 
 function curateAndSaveImage(buffBase64, callback) {
@@ -60,7 +54,7 @@ function curateAndSaveImage(buffBase64, callback) {
             })
         } catch (e) {}
         return { timestamp: timestamp, palette: palette }
-    } else return { timestamp: -1, palette: "158,197,216" }
+    } else return defaultReturn
         // callback(null, timestamp,  KB, save);
 }
 
