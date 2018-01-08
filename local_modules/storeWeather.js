@@ -1,43 +1,41 @@
+var db = {};
+var history = {};
 var config = { db: {}, updateRate: 0 };
 
-module.exports = function(_config) {
-    for (var p of Object.keys(config)) config[p] = _config[p]
+module.exports = function(Config) {
+    for (var p of Object.keys(config)) config[p] = Config[p]
 
     try { //Initialize Directory
         require('fs').mkdirSync(config.db.directory);
         console.log("Database initialized in", config.db.directory)
     } catch (e) {}
-    return intializeDatabases;
+    return intializeDatabase;
 }
 
 //Helper
-function storeData(weather, callback) {
-    console.log("in store", weather)
-    var timestamp = weather.timestamp
-    delete weather.timestamp
-    delete weather.uptime
-    for (var measurement of Object.keys(weather)) {
-        var fileName = `${config.db.directory}${measurement}.hoard`;
-        Object.keys(weather).forEach((measurement) => {
-            var fileName = config.db.directory + measurement + '.hoard';
-            //update
-        });
-    }
+function storeData(data, callback) {
+    history.push(data)
+    db.insert(data, err => { callback(null, history) });
 }
 
-function intializeDatabases(weather, callback) {
-    var lWeather = JSON.parse(JSON.stringify(weather))
+function intializeDatabase(data, callback) {
     var name = __filename.split(/[\\/]/).splice(-1)[0].split('.')[0]
-    var retention = [config.updateRate / 1000, config.db.totalPointsPerDB];
-    delete lWeather.timestamp
-    delete lWeather.uptime
-    var size = Object.keys(lWeather).length
-    var callbacks = 0;
-    Object.keys(lWeather).forEach((measurement) => {
-        var fileName = config.db.directory + measurement + '.hoard';
-        //Create
+
+    db = new(require('nedb'))({
+        filename: config.db.directory + config.db.fileName,
+        autoload: true
     });
-    
-    //Future function calls should now update the db's which now definitely exist
-    this[name] = storeData
+
+    db.ensureIndex({ fieldName: 'timestamp', expireAfterSeconds: config.db.retention }, err => {
+        if (err) callback(err)
+
+        db.find({ timestamp: { $gt: Date.now() - config.db.retention } }, { _id: 0 }, (err, docs) => {
+            if (err) callback(err)
+            history = docs;
+
+            //Future function calls should now update the db's which now definitely exist
+            this[name] = storeData
+            storeData(data, callback)
+        });
+    })
 }

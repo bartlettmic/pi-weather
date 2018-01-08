@@ -1,31 +1,53 @@
 const imageManipulator = require("jimp");
-
 const DARK_IMAGE_SIZE_THRESHOLD = 600 //KB
-const IMAGE_HEIGHT = 1080;
-const IMAGE_WIDTH = 1920;
+    // const config.snapshot.height = 1080;
+    // const config.snapshot.width = 1920;
 
-var config = { snapshot: {}, publicDirectory:"" };
+var config = { snapshot: {}, server: {} };
+var filePath = "";
+
+// const raspistill = require('node-raspistill').Raspistill
+// const camera = new raspistill({
+//     noFileSave: true,
+//     width: config.snapshot.width,
+//     height: config.snapshot.height,
+//     time: 0,
+// });
+
+const PiCamera = require('pi-camera');
+var camera
 
 module.exports = function(_config) {
-    for (var p of Object.keys(config)) config[p]=_config[p]
+    for (var p of Object.keys(config)) config[p] = _config[p]
+    filePath = config.server.staticDirectory + config.snapshot.fileName
+
+    camera = new PiCamera({
+        mode: 'photo',
+        output: config.server.staticDirectory + 'tmp.jpg',
+        width: config.snapshot.width,
+        height: config.snapshot.height,
+        nopreview: true,
+    });
+
     return tryRaspiStill
 }
 
 ///////////////////////////////////////////// Helper functions
 function tryRaspiStill(callback) {
-    new(require('node-raspistill').Raspistill)({
-        noFileSave: true,
-        width: IMAGE_WIDTH,
-        height: IMAGE_HEIGHT,
-    })
-    .takePhoto()
-    .then((buff) => { curateAndSaveImage(buff, callback); }, webcamFallback(callback))
+    // camera.takePhoto()
+    camera.snap()
+        .then(buff => {
+            console.log(buff)
+            callback(null, curateAndSaveImage(buff))
+        })
+        .catch(err => callback)
 }
-    
+
 function curateAndSaveImage(buffBase64, callback) {
     var KB = Buffer.byteLength(buffBase64, 'base64') / 1000;
-    process.stdout.write(" " + KB + "KB");
-    if (KB > DARK_IMAGE_SIZE_THRESHOLD) {
+    console.log(KB)
+    var save = KB > DARK_IMAGE_SIZE_THRESHOLD
+    if (save) {
         var timestamp = Math.round((new Date()).getTime() / 1000)
         try {
             imageManipulator.read(buffBase64, (err, image) => {
@@ -33,33 +55,30 @@ function curateAndSaveImage(buffBase64, callback) {
                 else {
                     //Preserve unmodified image if config specified a directory
                     if (config.snapshot.timelapseDirectory) image.write(`${config.snapshot.timelapseDirectory}${timestamp}.${image.getExtension()}`);
-                    image.resize(IMAGE_WIDTH / 4, IMAGE_HEIGHT / 4).write(config.publicDirectory + config.snapshot.fileName, callback)
+                    image.resize(config.snapshot.width / 4, config.snapshot.height / 4).write(filePath, err => { if (err) callback(err) })
                 }
             })
         } catch (e) {}
-        process.stdout.write("+");
-        callback(null, timestamp);
-    } else {
-        process.stdout.write("-");
-        callback(null, -1)
-    }
+        return { timestamp: timestamp, palette: palette }
+    } else return { timestamp: -1, palette: "158,197,216" }
+        // callback(null, timestamp,  KB, save);
 }
 
-function webcamFallback(callback) {
-    require("node-webcam").capture("\\", {
-        width: IMAGE_WIDTH,
-        height: IMAGE_HEIGHT,
-        quality: 100,
-        delay: 0,
-        output: "jpeg",
-        saveShots: false,
-        callbackReturn: "base64"
-    }, (err, URI) => {
-        if (err) callback(err)
-        else curateAndSaveImage(URItoBase64(URI), callback)
-    })
-}
+// function webcamFallback(callback) {
+//     require("node-webcam").capture(config.server.staticDirectory, {
+//         width: config.snapshot.width,
+//         height: config.snapshot.height,
+//         quality: 100,
+//         delay: 0,
+//         output: "jpeg",
+//         saveShots: false,
+//         callbackReturn: "base64"
+//     }, (err, URI) => {
+//         if (err) callback(err)
+//         else curateAndSaveImage(URItoBase64(URI), callback)
+//     })
+// }
 
-function URItoBase64(URI) {
-    return (new Buffer(URI.substring(URI.indexOf('base64') + 7), 'base64'))
-}
+// function URItoBase64(URI) {
+//     return (new Buffer(URI.substring(URI.indexOf('base64') + 7), 'base64'))
+// }

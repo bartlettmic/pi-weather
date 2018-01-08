@@ -10,13 +10,11 @@ html
         //- style="body:before { box-shadow: inset 0 0 100vw 100vw rgba(" + palette + ",0.2); }"
         link(rel="stylesheet", href="/style.css")        
     body
-        canvas(id="container")
+        
         //- div(class="center" style="background-color: rgba(" + palette + ", 0.75)")
         div(class="center rows")
             div(class="rows")
-                h1="Updated: " + weatherTimestamp
-                //- h1(class="underlined")="Uptime: " + uptime
-                h1="Uptime: " + uptime
+                h1="Updated @ " + weatherTimestamp
                 div(class="underlined")
             div(class="cols")
                 //- video(autoplay='', loop='', muted='')
@@ -24,3 +22,5 @@ html
                 div(class="rows")
                     each val in measurements
                         p=val
+                        
+                

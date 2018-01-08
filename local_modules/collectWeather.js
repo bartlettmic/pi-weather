@@ -1,9 +1,8 @@
-const fs = require('fs');
 const Particle = require('particle-api-js');
-
 const particle = new Particle();
+// const particle = new( (require('particle-api-js'))() )
 
-var config = { particle: {}, publicDirectory:"" };
+var config = { particle: {}, weather: {}, server: {} };
 
 module.exports = function(_config) {
     for (var p of Object.keys(config)) config[p]=_config[p]
@@ -19,7 +18,6 @@ function scrapeWeather(callback) {
         argument: '' //Update this if we ever need conditional results, maybe sleep time?
     })
     .then((data) => {
-        process.stdout.write('Collecting... ');
         particle.getDevice({ deviceId: config.particle.ID, auth: config.particle.token }).then((data) => {
             var promises = [];
             
@@ -27,35 +25,29 @@ function scrapeWeather(callback) {
                 promises.push(
                     particle.getVariable({ deviceId: config.particle.ID, name: v, auth: config.particle.token })
                     .then((data) => {
-                        var _trunc = truncate(data.body.result);
-                        if (!isNaN(_trunc)) data.body.result = _trunc;
+                        if (!isNaN(data.body.result)) data.body.result = truncate(data.body.result);
                         return data;
-                    }, (err) => { console.log(err), callback(err) })
+                    }, err => { console.log(err), callback(err) })
                 )
             }
 
             Promise.all(promises).then(values => {
                 var output = {};
                 for (var v of values) output[v.body.name] = v.body.result;
-                output.timestamp = Date.now();
-                output.rain *= 0.011;
-                fs.writeFileSync(config.publicDirectory + 'weather.json', JSON.stringify(output, null, "\t"), 'utf8');
-                output = { pretty: parseWeather(output), json: output }
-                process.stdout.write('\r' + output.pretty.timestamp);
-                // for (var v of Object.getOwnPropertyNames(output)) {}
-                callback(null, output)
+                output = { measurements: output, timestamp: Date.now() }
+                callback(null, { pretty: prettifyWeather(output), json: output })
             })
-            .catch((err) => { console.log("Unable to resolve all promises."), callback(err) })
+            .catch(err => { console.log("Unable to resolve all promises."), callback(err) })
 
-        }, (err) => { console.log('Device call failed.', err), callback(err) });
-    }, (err) => { console.log('Unable to update station.', err), callback(err) });    
+        }, err => { console.log('Device call failed.', err), callback(err) });
+    }, err => { console.log('Unable to update station.', err), callback(err) });    
 }
 
-function parseWeather(weather) {
+function prettifyWeather(weather) {
     var output = {
         timestamp: parseTimestamp(weather.timestamp),
-        uptime: parseUptime(weather.uptime),
-        measurements: formatWeatherData(weather)
+        // uptime: parseUptime(weather.uptime),
+        measurements: prettifyMeasurements(weather.measurements)
     }
     return output;
 }
@@ -71,25 +63,26 @@ function parseTimestamp(ms) {
         '/' + (d.getFullYear().toString().substr(-2));
 }
 
-function parseUptime(ms) {
-    days = Math.floor(ms / (24 * 60 * 60 * 1000));
-    daysms = ms % (24 * 60 * 60 * 1000);
-    hours = Math.floor((daysms) / (60 * 60 * 1000));
-    hoursms = ms % (60 * 60 * 1000);
-    minutes = Math.floor((hoursms) / (60 * 1000));
-    minutesms = ms % (60 * 1000);
-    sec = Math.floor((minutesms) / (1000));
-    return (days > 0 ? days + "d " : "") + hours + "h " + minutes + "m " + sec + "s";
-}
+// function parseUptime(ms) {
+//     days = Math.floor(ms / (24 * 60 * 60 * 1000));
+//     daysms = ms % (24 * 60 * 60 * 1000);
+//     hours = Math.floor((daysms) / (60 * 60 * 1000));
+//     hoursms = ms % (60 * 60 * 1000);
+//     minutes = Math.floor((hoursms) / (60 * 1000));
+//     minutesms = ms % (60 * 1000);
+//     sec = Math.floor((minutesms) / (1000));
+//     return (days > 0 ? days + "d " : "") + hours + "h " + minutes + "m " + sec + "s";
+// }
 
-function formatWeatherData(data) {
+//TODO: Read these specifications from config
+function prettifyMeasurements(data) {
     var output = {}
     output["Temperature"] = data.temperature + "\u00B0F (" + truncate((data.temperature - 32) / 1.8) + "\u00B0C)";
     output["Humidity"] = data.humidity + "%";
-    output["Pressure"] = data.pressure + " Pa"
+    output["Pressure"] = truncate(data.pressure/100) + " hPa"
     output["Rain"] = data.rain + " in/hr"
-    output["Wind Speed"] = data.winspd + " mph";
-    output["Wind Direction"] = unicodeWindDirection(data.windir);
+    output["Wind Speed"] = data.windspd + " mph";
+    output["Wind Direction"] = unicodeWindDirection(data.winddir);
     output = JSON.stringify(output).replace(/[\"|\{|\}]/g, "").split(/,/)
     output.forEach((value, index) => { output[index] = value.split(':').join(': ') })
     return output;
