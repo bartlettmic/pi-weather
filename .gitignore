@@ -5,6 +5,8 @@
 config.json
 weather.json
 nohup.out
+prometheus/*
+tmp/*
 
 
 # Logs
