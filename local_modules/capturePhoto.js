@@ -8,19 +8,30 @@ const DARK_IMAGE_SIZE_THRESHOLD = 600 //KB
 var config = { snapshot: {}, server: {} };
 var filePath = "";
 
-const raspistill = require('node-raspistill').Raspistill
-const camera = new raspistill({
-    noFileSave: true,
-    width: config.snapshot.width,
-    height: config.snapshot.height,
-    time: 0,
-});
+// const raspistill = require('node-raspistill').Raspistill
+// const camera = new raspistill({
+//     noFileSave: true,
+//     width: config.snapshot.width,
+//     height: config.snapshot.height,
+//     time: 0,
+// });
 
+const PiCamera = require('pi-camera');
+var camera
 const defaultReturn = { timestamp: -1, palette: config.snapshot.defaultPalette }
 
 module.exports = function(_config) {
     for (var p of Object.keys(config)) config[p] = _config[p]
     filePath = config.server.staticDirectory + config.snapshot.fileName
+
+    camera = new PiCamera({
+        mode: 'photo',
+        output: config.server.staticDirectory + 'tmp.jpg',
+        width: config.snapshot.width,
+        height: config.snapshot.height,
+        nopreview: true,
+    });
+
     return tryRaspiStill
 }
 
@@ -28,7 +39,7 @@ module.exports = function(_config) {
 function tryRaspiStill(callback) {
     return new Promise((resolve, reject) => {
         // camera.takePhoto()
-        camera.takePhoto()
+        camera.snap()
             .then(buff => {
                 console.log(buff)
                 resolve({ image: curateAndSaveImage(buff) })

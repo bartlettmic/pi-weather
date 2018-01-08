@@ -2,27 +2,29 @@
 const exp = require('express');
 const app = exp()
 var config = { server: {}, snapshot: {}, updateRate: 300000 };
-var deliverables = {
-    image: {
-        timestamp: Date.now(),
-        palette: config.snapshot.defaultPalette
-    },
-    weather: {
-        pretty: {
-            measurements: ["Initializing..."],
-            timestamp: Date.now().toLocaleString()
-        },
-        json: {
-            measurements: ["Initializing..."],
-            timestamp: Date.now()
-        }
-    }
-}
+var deliverables = {}
 
 module.exports = function(Config) {
     for (var p of Object.keys(config)) config[p] = Config[p]
-    payload = { imageFileName: config.snapshot.fileName }
-
+    
+    deliverables = {
+        imageFileName: config.snapshot.fileName,
+        image: {
+            timestamp: Date.now(),
+            palette: config.snapshot.defaultPalette
+        },
+        weather: {
+            pretty: {
+                measurements: ["Initializing..."],
+                timestamp: Date.now().toLocaleString()
+            },
+            json: {
+                measurements: ["Initializing..."],
+                timestamp: Date.now()
+            }
+        }
+    }
+    
     app.listen(config.server.port, () => { console.log('Listening on ' + config.server.port); })
     app.set('views', config.server.viewDirectory).set('view engine', 'pug')
     app.use(exp.static(config.server.staticDirectory))
