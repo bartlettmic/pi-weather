@@ -7,10 +7,10 @@ const config = require('./config');
 module.exports = function(callback) {
 
     try {
-	var outTemp = JSON.parse(cp.execSync('curl https://api.particle.io/v1/devices/31001d001647343337363432/baroTemp?access_token=ab3e0bb7c384847246e3c8276afa54adbf5971f4'));
-	cp.execSync('echo "outside ' + outTemp.result + '" | curl --data-binary @- http://localhost:9091/metrics/job/weather');
-	var wind = JSON.parse(cp.execSync('curl https://api.particle.io/v1/devices/31001d001647343337363432/wind?access_token=ab3e0bb7c384847246e3c8276afa54adbf5971f4'));
-    	cp.execSync('echo "outwind ' + wind.result + '" | curl --data-binary @- http://localhost:9091/metrics/job/weather');
+	var outTemp = JSON.parse(cp.execSync('curl -s https://api.particle.io/v1/devices/31001d001647343337363432/baroTemp?access_token=ab3e0bb7c384847246e3c8276afa54adbf5971f4'));
+	cp.execSync('echo "outside ' + outTemp.result + '" | curl -s --data-binary @- http://localhost:9091/metrics/job/weather');
+	var wind = JSON.parse(cp.execSync('curl -s https://api.particle.io/v1/devices/31001d001647343337363432/wind?access_token=ab3e0bb7c384847246e3c8276afa54adbf5971f4'));
+    	cp.execSync('echo "outwind ' + wind.result + '" | curl -s --data-binary @- http://localhost:9091/metrics/job/weather');
     } catch(e) {}
 
     particle.callFunction({

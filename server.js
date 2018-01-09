@@ -57,9 +57,11 @@ app.get('/', function(req, res) {
 });
 
 function getColor(palette) {
+try {
     if (palette.LightVibrant) return palette.LightVibrant._rgb.map((c) => { return Math.round(c) }).join(",");
     if (palette.LightMuted) return palette.LightMuted._rgb.map((c) => { return Math.round(c) }).join(",");
     if (palette.Vibrant) return palette.Vibrant._rgb.map((c) => { return Math.round(c) }).join(",");
     if (palette.Muted) return palette.Muted._rgb.map((c) => { return Math.round(c) }).join(",");
     // if (palette.DarkMuted) return palette.DarkMuted._rgb.map((c) => { return Math.round(c) }).join(",");
+} catch(e) {}
 }

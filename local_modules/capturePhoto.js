@@ -7,11 +7,12 @@ imgur.setCredentials(config.imgur.username, config.imgur.password, (config.imgur
 
 module.exports = function(callback) {
     new(require('node-raspistill').Raspistill)({
-
+	time: 0,
         noFileSave: true,
         width: 1920,
         height: 1080,
-
+	verticalFlip: true,
+	horizontalFlip: true,
     })
     .takePhoto().then((buff) => {
         var _KB = Buffer.byteLength(buff, 'base64') / 1000;

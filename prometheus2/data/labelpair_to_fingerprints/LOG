@@ -1,0 +1,18 @@
+=============== Jan 7, 2018 (MST) ===============
+15:41:43.791275 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+15:41:43.791906 db@open opening
+15:41:43.794971 version@stat F·[] S·0B[] Sc·[]
+15:41:43.817702 db@janitor F·2 G·0
+15:41:43.817842 db@open done T·25.895365ms
+15:48:40.004535 db@close closing
+15:48:40.004743 db@close done T·200.05µs
+=============== Jan 7, 2018 (MST) ===============
+19:07:11.560701 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+19:07:11.572389 version@stat F·[] S·0B[] Sc·[]
+19:07:11.572488 db@open opening
+19:07:11.572892 journal@recovery F·1
+19:07:11.573471 journal@recovery recovering @1
+19:07:11.616834 memdb@flush created L0@2 N·78 S·5KiB "\x06jo..her,v6":"\x18ex..her,v31"
+19:07:11.619645 version@stat F·[1] S·5KiB[5KiB] Sc·[0.25]
+19:07:11.621150 db@janitor F·3 G·0
+19:07:11.621274 db@open done T·48.731378ms
