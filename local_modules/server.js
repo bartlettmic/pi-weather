@@ -56,6 +56,10 @@ module.exports = function(Config) {
 
         httpServer.listen(8080);
         httpsServer.listen(8443);
+        
+        httpApp.get("*", function (req, res, next) {
+            res.redirect("https://" + req.headers.host + "/" + req.path);
+        });
     */
 
     app.listen(config.server.port, () => { console.log('Listening on ' + config.server.port); })
@@ -65,7 +69,7 @@ module.exports = function(Config) {
     app.get('/', (req, res) => { res.render('index', servables) })
     app.get('/weather', (req, res) => { res.jsonp(servables.weather.json) })
     app.get('/wind', (req, res) => { res.send("<style>body { background-color: grey;}</style>" + servables.graphs.wind) })
-    app.get('/history', (req, res) => { res.send(servables.history) })
+    app.get('/history', (req, res) => { res.jsonp(servables.history) })
     app.get('/servables', (req, res) => { res.send(servables) })
 
     /* TO-DO: Services:
