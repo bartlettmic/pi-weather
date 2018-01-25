@@ -29,7 +29,7 @@ function tryRaspiStill(callback) {
         camera.takePhoto()
             .then(buff => {
                 console.log(buff)
-                resolve({ image: curateAndSaveImage(buff) })
+                resolve({ image: curateAndSaveImage(buff, reject) })
             })
             .catch(err => resolve(defaultReturn))
     })
@@ -38,9 +38,8 @@ function tryRaspiStill(callback) {
 function curateAndSaveImage(buffBase64, callback) {
     var KB = Buffer.byteLength(buffBase64, 'base64') / 1000;
     console.log(KB)
-    var save = KB > DARK_IMAGE_SIZE_THRESHOLD;
     var timestamp = -1;
-    if (save) {
+    if (KB > config.snapshot.kbSizeThreshold) {
         timestamp = Math.round((new Date()).getTime() / 1000)
         try {
             imageManipulator.read(buffBase64, (err, image) => {
@@ -48,7 +47,10 @@ function curateAndSaveImage(buffBase64, callback) {
                 else {
                     //Preserve unmodified image if config specified a directory
                     if (config.snapshot.timelapseDirectory) image.write(`${config.snapshot.timelapseDirectory}${timestamp}.${image.getExtension()}`);
-                    image.resize(config.snapshot.width / 4, config.snapshot.height / 4).write(filePath, err => { if (err) callback(err) })
+                    image.resize(
+                        config.snapshot.width / config.snapshot.downscale,
+                        config.snapshot.height / config.snapshot.downscale)
+                    .write(filePath, err => { if (err) callback(err) })
                 }
             })
         } catch (e) {}

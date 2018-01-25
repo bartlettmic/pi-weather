@@ -76,8 +76,8 @@ module.exports = function(Config) {
                         About page!
                         Graph to png
                         Database explorer
-                        Immediate update trigger
-                        Isolated graphs?
+                        Immediate update trigger -> async redirect 
+                        Isolated graphs? -> Use basic contrast-bg view
     */
 
     return function(payload) {
