@@ -1,3 +1,4 @@
+
 // const schedule = require('node-schedule');
 const exp = require('express');
 const app = exp()
@@ -9,6 +10,10 @@ module.exports = function(Config) {
     
     deliverables = {
         imageFileName: config.snapshot.fileName,
+        updateRate: config.updateRate,
+        graphs: {
+          wind: require('fs').readFileSync(`${config.server.assetDirectory}AnenometerVaneTemplate.svg`).toString()
+        },
         image: {
             timestamp: Date.now(),
             palette: config.snapshot.defaultPalette
@@ -16,7 +21,7 @@ module.exports = function(Config) {
         weather: {
             pretty: {
                 measurements: ["Initializing..."],
-                timestamp: Date.now().toLocaleString()
+                timestamp: (new Date).toLocaleString()
             },
             json: {
                 measurements: ["Initializing..."],
@@ -26,19 +31,17 @@ module.exports = function(Config) {
     }
     
     app.listen(config.server.port, () => { console.log('Listening on ' + config.server.port); })
+    
     app.set('views', config.server.viewDirectory).set('view engine', 'pug')
     app.use(exp.static(config.server.staticDirectory))
-    app.get('/', (req, res) => { res.render('index', payload) })
+    app.get('/', (req, res) => { res.render('index', deliverables) })
     app.get('/weather', (req, res) => { res.jsonp(deliverables.weather.json) })
+    app.get('/wind', (req, res) => { res.send("<style>body { background-color: grey;}</style>"+deliverables.graphs.wind) })
+    app.get('/history', (req, res) => { res.send(deliverables.history) })
+    app.get('/deliverables', (req, res) => { res.send(deliverables) })
 
     return function(payload) {
         deliverables = Object.assign(deliverables, payload)
         // console.log(deliverables)
     }
 }
-
-// imageTimestamp: Date.now(),
-// palette: config.snapshot.defaultPalette,
-// measurements: [],
-// weatherTimestamp: Date.now(),
-// weatherJSON: {}
