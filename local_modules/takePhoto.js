@@ -1,24 +1,22 @@
 const imageManipulator = require("jimp");
-// const vibrant = require('node-vibrant')
-
-const DARK_IMAGE_SIZE_THRESHOLD = 600 //KB
+const raspistill = require('node-raspistill').Raspistill
+    // const vibrant = require('node-vibrant')
 
 var config = { snapshot: {}, server: {} };
 var filePath = "";
-
-const raspistill = require('node-raspistill').Raspistill
-const camera = new raspistill({
-    noFileSave: true,
-    width: config.snapshot.width,
-    height: config.snapshot.height,
-    time: 0,
-});
+var camera;
 
 const defaultReturn = { timestamp: -1, palette: config.snapshot.defaultPalette }
 
-module.exports = function(_config) {
-    for (var p of Object.keys(config)) config[p] = _config[p]
+module.exports = function(Config) {
+    for (var p of Object.keys(config)) config[p] = Config[p]
     filePath = config.server.staticDirectory + config.snapshot.fileName
+    camera = new raspistill({
+        noFileSave: true,
+        width: config.snapshot.width,
+        height: config.snapshot.height,
+        time: 0,
+    });
     return tryRaspiStill
 }
 
@@ -48,13 +46,13 @@ function curateAndSaveImage(buffBase64, callback) {
                     //Preserve unmodified image if config specified a directory
                     if (config.snapshot.timelapseDirectory) image.write(`${config.snapshot.timelapseDirectory}${timestamp}.${image.getExtension()}`);
                     image.resize(
-                        config.snapshot.width / config.snapshot.downscale,
-                        config.snapshot.height / config.snapshot.downscale)
-                    .write(filePath, err => { if (err) callback(err) })
+                            config.snapshot.width / config.snapshot.downscale,
+                            config.snapshot.height / config.snapshot.downscale)
+                        .write(filePath, err => { if (err) callback(err) })
                 }
             })
         } catch (e) {}
-    } 
+    }
     // var palette = 
     return { timestamp: timestamp, palette: palette }
 }
