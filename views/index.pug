@@ -23,6 +23,11 @@ html
             div(class="rows")
                 h1="As of " + weather.pretty.timestamp
                 div(class="underlined")
+                
+                //-TO-DO:
+                //-     Left justify measurement names
+                //-     Right justfy values
+                
                 div(class="rows")
                     each val in weather.pretty.measurements
                         p=val

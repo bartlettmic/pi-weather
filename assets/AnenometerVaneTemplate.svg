@@ -30,11 +30,7 @@
       }
       .cls-9 {
         stroke-dasharray: 1 2;
-      }
-      .cls-10 {
-        stroke-width: 0;
-      }
-      </style>
+      }</style>
 </defs>
 <text class="cls-1" transform="translate(0 56) scale(1)">W</text>
 <text class="cls-2" transform="matrix(.71 -.7 .71 .7 16.84 21.22)">NW</text>

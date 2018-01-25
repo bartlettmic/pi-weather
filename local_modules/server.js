@@ -6,7 +6,7 @@ var servables = {}
 
 module.exports = function(Config) {
     for (var p of Object.keys(config)) config[p] = Config[p]
-
+    
     servables = {
         imageFileName: config.snapshot.fileName,
         updateRate: config.updateRate,
