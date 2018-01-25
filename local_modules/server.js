@@ -69,8 +69,11 @@ module.exports = function(Config) {
     app.get('/servables', (req, res) => { res.send(servables) })
 
     /* TO-DO: Services:
-                        Graph to png service
-                        Database explorer service
+                        About page!
+                        Graph to png
+                        Database explorer
+                        Immediate update trigger
+                        Isolated graphs?
     */
 
     return function(payload) {
