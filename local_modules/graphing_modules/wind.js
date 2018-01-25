@@ -1,4 +1,4 @@
-var config = { server: {}, db: {}, updateRate: 0 };
+var config = { server: {} };
 var wind
 
 
