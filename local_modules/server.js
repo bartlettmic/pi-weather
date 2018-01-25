@@ -68,7 +68,9 @@ module.exports = function(Config) {
     app.use(exp.static(config.server.staticDirectory))
     app.get('/', (req, res) => { res.render('index', servables) })
     app.get('/weather', (req, res) => { res.jsonp(servables.weather.json) })
-    app.get('/wind', (req, res) => { res.send("<style>body { background-color: grey;}</style>" + servables.graphs.wind) })
+    
+    app.get('/graph/*', (req, res) => { res.render('graph', { graph: servables.graphs.wind }) })
+    
     app.get('/history', (req, res) => { res.jsonp(servables.history) })
     app.get('/servables', (req, res) => { res.send(servables) })
 
@@ -78,6 +80,7 @@ module.exports = function(Config) {
                         Database explorer
                         Immediate update trigger -> async redirect 
                         Isolated graphs? -> Use basic contrast-bg view
+                        Forecast?
     */
 
     return function(payload) {
