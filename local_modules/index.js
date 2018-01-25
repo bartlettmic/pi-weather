@@ -11,6 +11,16 @@ var modules = {};
 module.exports = function(config) {
     expectedModules.forEach(module => { modules[module] = require(`./${module}`)(config); })
 
+    /*
+    TO-DO: COME UP WITH A WAY TO ONLY UPDATE THE GRAPHS AND SHIT PER-REQUEST
+                SAVE TIMESTAMP OF LAST GENERATION AND LAST DATA
+    
+        HOLD COPY OF DELIVERABLES HERE?
+        GIVE UPDATE FUNCTION TO SERVER??????????
+        SERIOUSLY WE SHOULDN'T BE RE-RENDERING THE GRAPHS EVERY NEW DATA POINT
+    */
+    
+    
     return function() {
         modules.takePhoto()
             .then(payload => {

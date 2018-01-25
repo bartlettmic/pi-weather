@@ -21,9 +21,14 @@ module.exports = function(Config) {
 
     return function(history) {
         return {
-            wind: GenerateAnenometerVane(history)
+            wind: GenerateAnenometerVane(history),
+            temperature: GenerateLineChart(history)
         }
     }
+}
+
+function GenerateLineChart(history) {
+    //WHY GOD WHY HAVE YOU FORSAKEN ME TO DO EVERYTHING ON MY OWN ONCE AGAIN
 }
 
 function LoadWindTemplate() {
@@ -64,12 +69,12 @@ function GenerateAnenometerVane(history) {
     var graph = JSON.parse(JSON.stringify(wind.template));
 
     var maxspeed = Math.max.apply(Math, history.map(o => { return o.measurements.windspd }))
-    
+
     if (maxspeed < 1) {
-        
+
         // graph.push(`<text class="cls-3" transform="translate(${wind.center.x/1.5} ${wind.center.y}) scale(2)">No wind</text>`)
-        var dr = 0.7071*wind.radius;
-        
+        var dr = 0.7071 * wind.radius;
+
         var a = {
             x: wind.center.x + dr,
             y: wind.center.y + dr
@@ -80,18 +85,17 @@ function GenerateAnenometerVane(history) {
         }
         graph.push(`<line stroke="#F00" x1="${a.x}" x2="${b.x}" y1="${a.y}" y2="${b.y}" />`)
         graph.push(`<line stroke="#F00" x1="${a.x}" x2="${b.x}" y1="${b.y}" y2="${a.y}" />`)
-        // <text class="cls-3" transform="translate(54.1 3.7) scale(1)">N</text>
-    }
-    
-    else for (var i = 0; i < history.length; i++) 
-        graph.push(
-            GenerateArrowhead(
-                history[i].measurements.winddir,
-                history[i].measurements.windspd / maxspeed,
-                i / history.length
+            // <text class="cls-3" transform="translate(54.1 3.7) scale(1)">N</text>
+    } else
+        for (var i = 0; i < history.length; i++)
+            graph.push(
+                GenerateArrowhead(
+                    history[i].measurements.winddir,
+                    history[i].measurements.windspd / maxspeed,
+                    i / history.length
+                )
             )
-        )
-        // graph.push(GenerateArrowhead(getDirection(parseInt(Math.random()*8)), history[i].measurements.windspd / maxspeed, i / history.length))
+            // graph.push(GenerateArrowhead(getDirection(parseInt(Math.random()*8)), history[i].measurements.windspd / maxspeed, i / history.length))
 
     graph = graph.join("")
     graph += "</svg>"
@@ -123,7 +127,7 @@ function GenerateArrowhead(direction, magnitude, recentness) {
     }
 
     var wings = {
-        left: { 
+        left: {
             x: Math.cos(angle.left) * r2 + wind.center.x,
             y: Math.sin(angle.left) * r2 + wind.center.y
         },
