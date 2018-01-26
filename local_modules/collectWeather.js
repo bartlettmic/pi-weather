@@ -38,11 +38,10 @@ function scrapeWeather() {
                     direction: wind_[1]
                 }
                 
-                output = truncate(output)
-
                 resolve({ pretty: prettifyWeather(output), json: output })
             })
-            .catch(err => { console.log("Error fetching measurements"), reject(err) })
+            .catch(err => { console.log("Error fetching measurements", err),
+            reject(err) })
     })
 }
 

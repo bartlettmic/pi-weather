@@ -15,6 +15,8 @@ module.exports = function(Config) {
         noFileSave: true,
         width: config.snapshot.width,
         height: config.snapshot.height,
+        verticalFlip: true,
+        horizontalFlip: true,
         time: 0,
     });
     return tryRaspiStill
