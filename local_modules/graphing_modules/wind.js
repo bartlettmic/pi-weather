@@ -31,6 +31,8 @@ function LoadWindTemplate() {
                 vals = `"${vals[0]}":${vals[1]}`
                 return vals;
             }).join(",") + '}')
+            
+            console.log(words)
 
             //Get the information about the template programmatically
             wind.center.x = parseFloat(words.cx)
