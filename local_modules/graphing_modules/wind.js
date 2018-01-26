@@ -25,15 +25,13 @@ function LoadWindTemplate() {
             words.shift()
             words.pop()
             words.pop()
-            words.pop()
             words = JSON.parse('{' + words.map(w => {
                 var vals = w.split('=')
+                if (!vals[1]) return `"a":0`
                 vals = `"${vals[0]}":${vals[1]}`
                 return vals;
             }).join(",") + '}')
             
-            console.log(words)
-
             //Get the information about the template programmatically
             wind.center.x = parseFloat(words.cx)
             wind.center.y = parseFloat(words.cy)
