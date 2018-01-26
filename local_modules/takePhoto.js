@@ -37,7 +37,6 @@ function tryRaspiStill(callback) {
 
 function curateAndSaveImage(buffBase64, callback) {
     var KB = Buffer.byteLength(buffBase64, 'base64') / 1000;
-    console.log(KB)
     var timestamp = -1;
     if (KB > config.snapshot.kbSizeThreshold) {
         timestamp = Math.round((new Date()).getTime() / 1000)
