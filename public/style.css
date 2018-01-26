@@ -54,6 +54,8 @@ canvas {
 #graphs {
     flex-grow: 0.75;
     width: 100%;
+    justify-content: space-around;
+    
 }
 
 #graphs svg {

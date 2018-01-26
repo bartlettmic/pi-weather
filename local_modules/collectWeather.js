@@ -34,7 +34,7 @@ function scrapeWeather() {
                 var wind_ = output.measurements.wind.split(",")
                 
                 output.measurements.wind = {
-                    speed: wind_[0],
+                    speed: +wind_[0],
                     direction: wind_[1]
                 }
                 
@@ -81,8 +81,8 @@ function prettifyMeasurements(data) {
     output["Temperature"] = data.temperature + "\u00B0F (" + truncate((data.temperature - 32) / 1.8) + "\u00B0C)";
     output["Humidity"] = truncate(data.humidity) + "%";
     output["Pressure"] = truncate(data.pressure) + " hPa"
-    output["Rain"] = data.rain + " in/hr"
-    output["Wind Speed"] = data.wind.speed + " mph";
+    if (data.rain) output["Rain"] = data.rain + " in/hr"
+    if (data.wind.speed) output["Wind Speed"] = data.wind.speed + " mph";
     if (data.wind.direction) output["Wind Direction"] = unicodeWindDirection(data.wind.direction);
     output = JSON.stringify(output).replace(/[\"|\{|\}]/g, "").split(/,/)
     output.forEach((value, index) => { output[index] = value.split(':').join(': ') })
