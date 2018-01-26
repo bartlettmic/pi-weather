@@ -27,10 +27,7 @@ function tryRaspiStill(callback) {
     return new Promise((resolve, reject) => {
         // camera.takePhoto()
         camera.takePhoto()
-            .then(buff => {
-                console.log(buff)
-                resolve({ image: curateAndSaveImage(buff, reject) })
-            })
+            .then(buff => { resolve({ image: curateAndSaveImage(buff, reject) }) })
             .catch(err => resolve(defaultReturn))
     })
 }
