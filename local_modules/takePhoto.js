@@ -27,16 +27,15 @@ function tryRaspiStill(callback) {
     return new Promise((resolve, reject) => {
         // camera.takePhoto()
         camera.takePhoto()
-            .then(buff => { resolve({ image: curateAndSaveImage(buff, reject) }) })
+            .then(buff => { resolve( curateAndSaveImage(buff, reject) ) })
             .catch(err => resolve(defaultReturn))
     })
 }
 
 function curateAndSaveImage(buffBase64, callback) {
     var KB = Buffer.byteLength(buffBase64, 'base64') / 1000;
-    var timestamp = -1;
     if (KB > config.snapshot.kbSizeThreshold) {
-        timestamp = Math.round((new Date()).getTime() / 1000)
+        var timestamp = Math.round((new Date()).getTime() / 1000)
         try {
             imageManipulator.read(buffBase64, (err, image) => {
                 if (err) callback(err)
@@ -49,10 +48,11 @@ function curateAndSaveImage(buffBase64, callback) {
                         .write(filePath, err => { if (err) callback(err) })
                 }
             })
+            return {timestamp: timestamp, pallette: config.snapshot.defaultPalette}
         } catch (e) {}
     }
     // var palette = 
-    return { timestamp: timestamp, palette: palette }
+    return defaultReturn
 }
 
 
