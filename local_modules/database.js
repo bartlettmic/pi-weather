@@ -1,6 +1,6 @@
 var db = {};
 var history = {};
-var config = { db: {}, updateRate: 0 };
+var config = { db: {}, updateInterval: 0 };
 
 module.exports = function(Config) {
     for (var p of Object.keys(config)) config[p] = Config[p]

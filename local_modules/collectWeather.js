@@ -19,39 +19,39 @@ function scrapeWeather() {
                 argument: '' //Update this if we ever need conditional results, maybe sleep time?
             })
             .then((data) => {
-                particle.getDevice({ deviceId: config.particle.ID, auth: config.particle.token }).then((data) => {
-                    var promises = [];
+                return particle.getVariable({
+                    name: "JSON",
+                    deviceId: config.particle.ID,
+                    auth: config.particle.token
+                })
+            })
+            .then(data => {
+                var output = {
+                    measurements: JSON.parse(data.body.result),
+                    timestamp: Date.now()
+                };
+                
+                var wind_ = output.measurements.wind.split(",")
+                
+                output.measurements.wind = {
+                    speed: wind_[0],
+                    direction: wind_[1]
+                }
+                
+                output = truncate(output)
 
-                    for (var v of Object.getOwnPropertyNames(data.body.variables)) {
-                        promises.push(
-                            particle.getVariable({ deviceId: config.particle.ID, name: v, auth: config.particle.token })
-                            .then((data) => {
-                                if (!isNaN(data.body.result)) data.body.result = truncate(data.body.result);
-                                return data;
-                            }, err => { console.log(err), reject(err) })
-                        )
-                    }
-
-                    Promise.all(promises).then(values => {
-                            var output = {};
-                            for (var v of values) output[v.body.name] = v.body.result;
-                            output = { measurements: output, timestamp: Date.now() }
-                            resolve({ pretty: prettifyWeather(output), json: output })
-                        })
-                        .catch(err => { console.log("Unable to resolve all promises."), reject(err) })
-
-                }, err => { console.log('Device call failed.', err), reject(err) });
-            }, err => { console.log('Unable to update station.', err), reject(err) });
+                resolve({ pretty: prettifyWeather(output), json: output })
+            })
+            .catch(err => { console.log("Error fetching measurements"), reject(err) })
     })
 }
 
 function prettifyWeather(weather) {
-    var output = {
-        timestamp: parseTimestamp(weather.timestamp),
+    return {
+        measurements: prettifyMeasurements(weather.measurements),
+        timestamp: parseTimestamp(weather.timestamp)
         // uptime: parseUptime(weather.uptime),
-        measurements: prettifyMeasurements(weather.measurements)
     }
-    return output;
 }
 
 function parseTimestamp(ms) {
@@ -80,11 +80,11 @@ function parseTimestamp(ms) {
 function prettifyMeasurements(data) {
     var output = {}
     output["Temperature"] = data.temperature + "\u00B0F (" + truncate((data.temperature - 32) / 1.8) + "\u00B0C)";
-    output["Humidity"] = data.humidity + "%";
-    output["Pressure"] = truncate(data.pressure / 100) + " hPa"
+    output["Humidity"] = truncate(data.humidity) + "%";
+    output["Pressure"] = truncate(data.pressure) + " hPa"
     output["Rain"] = data.rain + " in/hr"
-    output["Wind Speed"] = data.windspd + " mph";
-    output["Wind Direction"] = unicodeWindDirection(data.winddir);
+    output["Wind Speed"] = data.wind.speed + " mph";
+    if (data.wind.direction) output["Wind Direction"] = unicodeWindDirection(data.wind.direction);
     output = JSON.stringify(output).replace(/[\"|\{|\}]/g, "").split(/,/)
     output.forEach((value, index) => { output[index] = value.split(':').join(': ') })
     return output;

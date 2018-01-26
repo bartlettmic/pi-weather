@@ -15,4 +15,4 @@
 
 const config = require('./config.json');
 const update = require('./local_modules')(config); 
-setInterval((() => { update(); return update; })(), config.updateRate)
+setInterval((() => { update(); return update; })(), config.updateInterval)

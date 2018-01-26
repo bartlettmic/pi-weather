@@ -1,5 +1,4 @@
-const fs = require('fs')
-var config = { server: {}, db: {}, updateRate: 0 };
+var config = { server: {}, db: {}, updateInterval: 0 };
 
 var charts = {
     wind: {},
@@ -12,17 +11,16 @@ var charts = {
 module.exports = function(Config) {
     for (var p of Object.keys(config)) config[p] = Config[p]
     
+    const lineGraphGenerator = require('./graphing_modules/lineGraph.js')(Config)
+    
     charts.wind = require('./graphing_modules/wind.js')(Config)
+    charts.temperature = lineGraphGenerator
 
     return function(history) {
         
         return {
             wind: charts.wind(history),
-            temperature: GenerateLineChart(history)
+            temperature: charts.temperature(history)
         }
     }
-}
-
-function GenerateLineChart(history) {
-    //WHY GOD WHY HAVE YOU FORSAKEN ME TO DO EVERYTHING ON MY OWN ONCE AGAIN
 }

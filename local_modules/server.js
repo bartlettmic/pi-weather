@@ -1,7 +1,7 @@
 // const schedule = require('node-schedule');
 const exp = require('express');
 const app = exp()
-var config = { server: {}, snapshot: {}, updateRate: 300000 };
+var config = { server: {}, snapshot: {}, updateInterval: 300000 };
 var servables = {}
 
 module.exports = function(Config) {
@@ -9,7 +9,7 @@ module.exports = function(Config) {
 
     servables = {
         imageFileName: config.snapshot.fileName,
-        updateRate: config.updateRate,
+        updateInterval: config.updateInterval,
         graphs: {
             wind: require('fs').readFileSync(`${config.server.assetDirectory}AnenometerVaneTemplate.svg`).toString()
         },
@@ -57,6 +57,16 @@ module.exports = function(Config) {
         httpServer.listen(8080);
         httpsServer.listen(8443);
         
+        //-------or-------
+        
+        http.createServer(httpApp).listen(httpApp.get('port'), function() {
+            console.log('Express HTTP server listening on port ' + httpApp.get('port'));
+        });
+
+        https.createServer(httpsOptions, app).listen(app.get('port'), function() {
+            console.log('Express HTTPS server listening on port ' + app.get('port'));
+        });
+        
         httpApp.get("*", function (req, res, next) {
             res.redirect("https://" + req.headers.host + "/" + req.path);
         });
@@ -69,7 +79,10 @@ module.exports = function(Config) {
     app.get('/', (req, res) => { res.render('index', servables) })
     app.get('/weather', (req, res) => { res.jsonp(servables.weather.json) })
     
-    app.get('/graph/*', (req, res) => { res.render('graph', { graph: servables.graphs.wind }) })
+    app.get('/graph/*', (req, res) => { 
+        console.log(req)
+        res.render('graph', { graph: servables.graphs.wind })
+    })
     
     app.get('/history', (req, res) => { res.jsonp(servables.history) })
     app.get('/servables', (req, res) => { res.send(servables) })

@@ -45,12 +45,11 @@ function GenerateAnenometerVane(history) {
 
     var graph = JSON.parse(JSON.stringify(wind.template));
 
-    var maxspeed = Math.max.apply(Math, history.map(o => { return o.measurements.windspd }))
+    var maxspeed = Math.max.apply(Math, history.map(o => { return o.measurements.wind.speed }))
 
     if (maxspeed < 1) {
-
-        // graph.push(`<text class="cls-3" transform="translate(${wind.center.x/1.5} ${wind.center.y}) scale(2)">No wind</text>`)
-        var dr = 0.7071 * wind.radius;
+        var radius = wind.radius/2
+        var dr = 0.7071 * radius;
 
         var a = {
             x: wind.center.x + dr,
@@ -60,19 +59,18 @@ function GenerateAnenometerVane(history) {
             x: wind.center.x - dr,
             y: wind.center.y - dr
         }
-        graph.push(`<line stroke="#F00" x1="${a.x}" x2="${b.x}" y1="${a.y}" y2="${b.y}" />`)
         graph.push(`<line stroke="#F00" x1="${a.x}" x2="${b.x}" y1="${b.y}" y2="${a.y}" />`)
-            // <text class="cls-3" transform="translate(54.1 3.7) scale(1)">N</text>
+        graph.push(`<circle stroke="#F00" fill="none" cx="${wind.center.x}" cy="${wind.center.y}" r="${radius}"></circle>`)
     } else
         for (var i = 0; i < history.length; i++)
             graph.push(
                 GenerateArrowhead(
-                    history[i].measurements.winddir,
-                    history[i].measurements.windspd / maxspeed,
+                    history[i].measurements.wind.direction,
+                    history[i].measurements.wind.speed / maxspeed,
                     i / history.length
                 )
             )
-            // graph.push(GenerateArrowhead(getDirection(parseInt(Math.random()*8)), history[i].measurements.windspd / maxspeed, i / history.length))
+            // graph.push(GenerateArrowhead(getDirection(parseInt(Math.random()*8)), history[i].measurements.wind.speed / maxspeed, i / history.length))
 
     graph = graph.join("")
     graph += "</svg>"

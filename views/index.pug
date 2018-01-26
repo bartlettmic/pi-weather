@@ -1,8 +1,8 @@
 html
     head
-        title Weather Analytics
+        title Weather Informatics
         meta(charset='utf-8')
-        meta(http-equiv="refresh", content=(updateRate/1000).toString())
+        meta(http-equiv="refresh", content=(updateInterval/1000).toString())
         //- script(src="/rain.js")
         style.
             ::selection {
@@ -31,7 +31,6 @@ html
                 div(class="rows")
                     each val in weather.pretty.measurements
                         p=val
-            div(class="cols" id="graphs")
-                svg.
-                    !{graphs.wind}
+            div(class="cols" id="graphs").
+                !{graphs.wind}
                 
