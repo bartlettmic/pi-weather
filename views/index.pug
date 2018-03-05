@@ -8,9 +8,9 @@ html
             ::selection {
                 background: rgb(!{image.palette});
             }
-            body { 
-                background-image: url("/!{imageFileName}?!{image.timestamp}"); 
-            }
+        //- body { 
+        //-     background-image: url("/!{imageFileName}?!{image.timestamp}");
+        //- }
         //- :root { 
                 //- --text-color: black; --shadow-color: black;
             //- }
@@ -19,6 +19,10 @@ html
             //- }
         link(rel="stylesheet", href="/style.css")        
     body
+        //- TO-DO:
+        //- Add timer until next refresh: 
+        //- (new Date(Date.now()+updateInterval))
+        
         div(class="center rows")
             div(class="rows")
                 h1="As of " + weather.pretty.timestamp

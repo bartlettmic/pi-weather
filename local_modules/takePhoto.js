@@ -4,13 +4,15 @@ const raspistill = require('node-raspistill').Raspistill
 
 var config = { snapshot: {}, server: {} };
 var filePath = "";
+var downscaledPath = "";
 var camera;
 
 const defaultReturn = { timestamp: -1, palette: config.snapshot.defaultPalette }
 
 module.exports = function(Config) {
     for (var p of Object.keys(config)) config[p] = Config[p]
-    filePath = config.server.staticDirectory + config.snapshot.fileName
+    filePath = config.server.assetDirectory + config.snapshot.fileName
+    downscaledPath = config.server.assetDirectory + config.snapshot.downscaledName
     camera = new raspistill({
         noFileSave: true,
         width: config.snapshot.width,
@@ -27,33 +29,39 @@ function tryRaspiStill(callback) {
     return new Promise((resolve, reject) => {
         // camera.takePhoto()
         camera.takePhoto()
-            .then(buff => { resolve( curateAndSaveImage(buff, reject) ) })
-            .catch(err => resolve(defaultReturn))
+            .then(buff => {
+                var KB = Buffer.byteLength(buffBase64, 'base64') / 1000;
+                if (KB > config.snapshot.kbSizeThreshold) {
+                    var timestamp = Math.round((new Date()).getTime() / 1000)
+                    try {
+                        imageManipulator.read(buffBase64, (err, image) => {
+                            if (err) callback(err)
+                            else {
+                                //Preserve unmodified image if config specified a directory
+                                if (config.snapshot.timelapseDirectory) image.write(`${config.snapshot.timelapseDirectory}${timestamp}.${image.getExtension()}`);
+                                
+                                image.write(filePath)   //Preserve original photo for on-demand
+                                
+                                image.resize(   //Downscale photo to conserve network traffic since it gets blurred
+                                        config.snapshot.width / config.snapshot.downscale,
+                                        config.snapshot.height / config.snapshot.downscale)
+                                    .write(downscaledPath, err => { if (err) callback(err) })
+                            }
+                        })
+                        resolve({ timestamp: timestamp, pallette: config.snapshot.defaultPalette })
+                    } catch (e) {
+                        reject(e)
+                    }
+                }
+                // var palette = 
+                resolve(defaultReturn)
+            })
+            .catch(err => reject(err))
     })
 }
 
-function curateAndSaveImage(buffBase64, callback) {
-    var KB = Buffer.byteLength(buffBase64, 'base64') / 1000;
-    if (KB > config.snapshot.kbSizeThreshold) {
-        var timestamp = Math.round((new Date()).getTime() / 1000)
-        try {
-            imageManipulator.read(buffBase64, (err, image) => {
-                if (err) callback(err)
-                else {
-                    //Preserve unmodified image if config specified a directory
-                    if (config.snapshot.timelapseDirectory) image.write(`${config.snapshot.timelapseDirectory}${timestamp}.${image.getExtension()}`);
-                    image.resize(
-                            config.snapshot.width / config.snapshot.downscale,
-                            config.snapshot.height / config.snapshot.downscale)
-                        .write(filePath, err => { if (err) callback(err) })
-                }
-            })
-            return {timestamp: timestamp, pallette: config.snapshot.defaultPalette}
-        } catch (e) {}
-    }
-    // var palette = 
-    return defaultReturn
-}
+// function curateAndSaveImage(buffBase64, callback) {}
+
 
 
 function getColor(palette) {

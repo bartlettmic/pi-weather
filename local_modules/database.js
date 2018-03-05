@@ -19,6 +19,7 @@ module.exports = function(Config) {
 function insert(data) {
     return new Promise((resolve, reject) => {
         history.push(data)
+        while (history.length > config.db.historyMaxSize) history.shift();
         db.insert(data, err => {
             if (err) reject(err)
             resolve(history) // Return comprehensive history including the new data.
