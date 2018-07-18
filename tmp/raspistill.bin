@@ -1,0 +1,55 @@
+#!/bin/bash
+
+##DEFAULTS
+DELAY=1500
+EXTENSION="bmp"
+FILENAME="output"
+SCRIPTDIR=$(dirname "$0")
+
+POSITIONAL=()
+while [[ $# -gt 0 ]]
+do
+key="$1"
+
+case $key in
+    -t|--timeout)
+    DELAY="$2"
+    shift # past argument
+    shift # past value
+    ;;
+    -o|--output)
+    FILENAME="${2%.*}"
+    EXTENSION=${2##*.}
+    shift # past argument
+    shift # past value
+    ;;
+    -p|--preview)
+    PREVIEW=1
+    shift # past argument
+    ;;
+    *)    # unknown option
+    
+    POSITIONAL+=("$1") # save it in an array for later
+    shift # past argument
+    ;;
+esac
+done
+set -- "${POSITIONAL[@]}" # restore positional parameters
+
+COMMAND="$SCRIPTDIR/CommandCam.exe //quiet //delay $DELAY //filename $FILENAME.bmp"
+
+if [ $PREVIEW ]; then
+    COMMAND="$COMMAND //preview"
+fi
+
+$($COMMAND)
+
+if [ "${EXTENSION}" != "bmp" ]; then
+    DIR=$(pwd)
+    SOURCE=$(printf %q "$FILENAME.bmp")
+    TARGET=$(printf %q "$FILENAME.$EXTENSION")
+    CONVERSION="ffmpeg -y -loglevel quiet -i $SOURCE $TARGET"
+    # echo $CONVERSION
+    $(cd "$PWD" && $CONVERSION && rm "$SOURCE")
+    
+fi
