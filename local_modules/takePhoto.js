@@ -1,8 +1,11 @@
 const imageManipulator = require("jimp");
-const raspistill = require('node-raspistill').Raspistill
+const raspistill = require('./submodules/raspistill.js')
+
+//TO-DO replace this shit with local module
+
     // const vibrant = require('node-vibrant')
 
-var config = { snapshot: {}, server: {} };
+var config = { snapshot: {}};
 var filePath = "";
 var downscaledPath = "";
 var camera;
@@ -13,54 +16,55 @@ module.exports = function(Config) {
     for (var p of Object.keys(config)) config[p] = Config[p]
     filePath = config.server.assetDirectory + config.snapshot.fileName
     downscaledPath = config.server.assetDirectory + config.snapshot.downscaledName
-    camera = new raspistill({
-        noFileSave: true,
-        width: config.snapshot.width,
-        height: config.snapshot.height,
-        verticalFlip: true,
-        horizontalFlip: true,
-        time: 0,
-    });
-    return tryRaspiStill
+    // camera = new raspistill({
+    //     noFileSave: true,
+    //     width: config.snapshot.width,
+    //     height: config.snapshot.height,
+    //     verticalFlip: true,
+    //     horizontalFlip: true,
+    //     time: 0,
+    // });
+    return function() {}
+    // return tryRaspiStill
 }
+
+// TO-DO: local raspistill module
+
+
 
 ///////////////////////////////////////////// Helper functions
-function tryRaspiStill(callback) {
-    return new Promise((resolve, reject) => {
-        // camera.takePhoto()
-        camera.takePhoto()
-            .then(buff => {
-                var KB = Buffer.byteLength(buffBase64, 'base64') / 1000;
-                if (KB > config.snapshot.kbSizeThreshold) {
-                    var timestamp = Math.round((new Date()).getTime() / 1000)
-                    try {
-                        imageManipulator.read(buffBase64, (err, image) => {
-                            if (err) callback(err)
-                            else {
-                                //Preserve unmodified image if config specified a directory
-                                if (config.snapshot.timelapseDirectory) image.write(`${config.snapshot.timelapseDirectory}${timestamp}.${image.getExtension()}`);
-                                
-                                image.write(filePath)   //Preserve original photo for on-demand
-                                
-                                image.resize(   //Downscale photo to conserve network traffic since it gets blurred
-                                        config.snapshot.width / config.snapshot.downscale,
-                                        config.snapshot.height / config.snapshot.downscale)
-                                    .write(downscaledPath, err => { if (err) callback(err) })
-                            }
-                        })
-                        resolve({ timestamp: timestamp, pallette: config.snapshot.defaultPalette })
-                    } catch (e) {
-                        reject(e)
-                    }
-                }
-                // var palette = 
-                resolve(defaultReturn)
-            })
-            .catch(err => reject(err))
-    })
-}
+// function tryRaspiStill() {
+//     return new Promise(function(resolve, reject) {
+//        camera.takePhoto()
+//             .then(buffBase64 => {
+//                 var KB = Buffer.byteLength(buffBase64, 'base64') / 1000;
+//                 if (KB > config.snapshot.kbSizeThreshold) {
+//                     var timestamp = Math.round((new Date()).getTime() / 1000)
+//                         // try {
 
-// function curateAndSaveImage(buffBase64, callback) {}
+//                     imageManipulator.read(buffBase64, (err, image) => {
+//                         if (err) throw err
+//                         else {
+//                             //Preserve unmodified image if config specified a directory
+//                             if (config.snapshot.timelapseDirectory) image.write(`${config.snapshot.timelapseDirectory}${timestamp}.${image.getExtension()}`);
+
+//                             image.write(filePath) //Preserve original photo for on-demand
+
+//                             image.resize( //Downscale photo to conserve network traffic since it gets blurred
+//                                     config.snapshot.width / config.snapshot.downscale,
+//                                     config.snapshot.height / config.snapshot.downscale)
+//                                 .write(downscaledPath, err => { if (err) throw err })
+//                         }
+//                     })
+//                     resolve({ timestamp: timestamp, pallette: config.snapshot.defaultPalette })
+
+//                 }
+//                 resolve(defaultReturn)
+//             })
+
+//         .catch(err => { reject(err) })
+//     })
+// }
 
 
 

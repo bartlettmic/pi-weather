@@ -8,7 +8,9 @@ module.exports = function(Config) {
     try { //Initialize Directory
         require('fs').mkdirSync(config.db.directory);
         console.log("Database initialized in", config.db.directory)
-    } catch (e) {}
+    } catch (e) {
+        console.log("Database found in", config.db.directory)
+    }
     return {
         insert: intializeDatabase,
         find: intializeDatabase

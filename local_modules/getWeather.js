@@ -56,15 +56,15 @@ function fakeWeather() {
             pressure: truncate(730 + 10 * ((new Date).getHours() / 24) + (1 - 2 * Math.random())),
             wind: {
                 speed: truncate(Math.random() * 12),
-                // direction: getDirection(
-                //     parseInt(
-                //         (
-                //             ((new Date).getHours() % 6)+ 1
-                //         ) / 6 * 7 +
-                //             (Math.random > 0.5 ? ( 1 - 2 * Math.random() ) : 0)
-                //         )
-                //     ),
-                direction: "W"
+                direction: getDirection(
+                    parseInt(
+                        (
+                            ((new Date).getHours() % 6)+ 1
+                        ) / 6 * 7 +
+                            (Math.random > 0.5 ? ( 1 - 2 * Math.random() ) : 0)
+                        )
+                    ),
+                // direction: "W"
             },
             rain: truncate(20 * Math.random() > 19 ? Math.random() * 5 : 0)
         },

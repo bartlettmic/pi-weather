@@ -1,4 +1,4 @@
-const expectedModules = [
+const moduleWhitelist = [
     "server",
     "database",
     "drawGraphs",
@@ -9,7 +9,7 @@ const expectedModules = [
 var modules = {};
 
 module.exports = function(config) {
-    expectedModules.forEach(module => { modules[module] = require(`./${module}`)(config); })
+    moduleWhitelist.forEach(module => { modules[module] = require(`./${module}`)(config); })
 
     /*
     TO-DO: COME UP WITH A WAY TO ONLY UPDATE THE GRAPHS AND SHIT PER-REQUEST
@@ -19,20 +19,22 @@ module.exports = function(config) {
         GIVE UPDATE FUNCTION TO SERVER??????????
         SERIOUSLY WE SHOULDN'T BE RE-RENDERING THE GRAPHS EVERY NEW DATA POINT
     */
+   
+//    modules.takePhoto().then(payload => console.log("Photo success")).catch(err => { console.log("Photo failure", err) })
 
     function update() {
         var promises = [
-            (modules.takePhoto()
-                .then(payload => {
-                    if (payload.timestamp < 0) console.log('-')
-                    else {
-                        console.log('+')
-                        modules.server({ image: payload })
-                    }
-                    return Promise.resolve(true)
-                })),
+            // modules.takePhoto()
+            //     .then(payload => {
+            //         if (payload.timestamp < 0) console.log('-')
+            //         else {
+            //             console.log('+')
+            //             modules.server({ image: payload })
+            //         }
+            //         return Promise.resolve(true)
+            //     }),
 
-            (modules.getWeather()
+            modules.getWeather()
                 .then(payload => {
                     modules.server({ weather: payload });
                     modules.database.insert(payload.json).then(history => {
@@ -43,15 +45,16 @@ module.exports = function(config) {
                     });
                     process.stdout.write(payload.pretty.timestamp)
                     return Promise.resolve(true)
-                }))
+                })
         ]
+
         return Promise.all(promises)
     }
 
 
     modules.server({ update: update });
 
-    update().then(val => console.log(val)).catch(err => console.log("Something went terribly wrong!", err));
+    update().then(val => console.log("\n",val)).catch(err => console.log("Something went terribly wrong!", err));
 
     return update
 }

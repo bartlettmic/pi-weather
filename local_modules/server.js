@@ -5,6 +5,8 @@ const path = require('path')
 var config = { server: {}, snapshot: {}, updateInterval: 300000 };
 var servables = {}
 
+//To-Do https://github.com/purifycss/purifycss Consider this for future shit
+
 module.exports = function(Config) {
     for (var p of Object.keys(config)) config[p] = Config[p]
 
@@ -13,7 +15,7 @@ module.exports = function(Config) {
             image: {
                 original: path.resolve(config.server.assetDirectory + config.snapshot.fileName),
                 downscaled: path.resolve(config.server.assetDirectory + config.snapshot.downscaledName),
-            }
+            } 
         },
         updateInterval: config.updateInterval,
         graphs: {
@@ -24,7 +26,7 @@ module.exports = function(Config) {
             palette: config.snapshot.defaultPalette
         },
         weather: {
-            pretty: {
+            pretty: { 
                 measurements: ["Initializing..."],
                 timestamp: (new Date).toLocaleString()
             },
@@ -84,6 +86,13 @@ module.exports = function(Config) {
 
     app.listen(config.server.port, () => { console.log('Listening on ' + config.server.port); })
 
+    /*TO-DO: https://stackoverflow.com/a/28626672
+    
+    also maybe: http://thejackalofjavascript.com/list-all-rest-endpoints/
+    
+        Dynamic directory for all endpoints
+    */
+    
     app.set('views', config.server.viewDirectory).set('view engine', 'pug')
     app.use(exp.static(config.server.staticDirectory))
     app.get('/', (req, res) => { res.render('index', servables) })
@@ -98,13 +107,12 @@ module.exports = function(Config) {
 
     app.get('/history', (req, res) => { res.jsonp(servables.history) })
     app.get('/servables', (req, res) => { res.send(servables) })
+    
     app.get('/update', (req, res) => {
-        var promise = servables.functions.update()
-        console.log(promise)
-        promise.then(val => {
-            console.log("Updated!")
-            res.redirect("/")
-        }).catch(err => res.send("Unable to update: " + err))
+        servables.functions.update()
+        .then(val => res.redirect("/"))
+        .catch(err => res.send("Unable to update: " + err))
+        // res.redirect("/")
     })
 
     /* TO-DO: Services:

@@ -91,7 +91,7 @@ function GenerateAnenometerVane(history) {
 
     for (var i = 0; i < history.length; i++) {
         average.speed += history[i].measurements.wind.speed
-        average.direction += (getDirection(history[i].measurements.wind.direction)/8) 
+        average.direction += (getDirection(history[i].measurements.wind.direction)) 
         // average.direction += 360 * (getDirection(history[i].measurements.wind.direction)/8) * (history[i].measurements.wind.speed / maxspeed) * (i / history.length)
         graph.push(
                 GenerateArrowhead(
@@ -110,11 +110,11 @@ function GenerateAnenometerVane(history) {
 
     average.direction /= history.length
     
-    average.direction*=Math.PI*2
+    // average.direction*=Math.PI*2
     
     // average.direction += Math.PI;
 
-    console.log(average)
+    // console.log(average)
 
     graph.push(GenerateArrowhead(average.direction, average.speed / maxspeed, 1, "rgba(255,64,0,0.75)"))
 

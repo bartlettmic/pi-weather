@@ -13,6 +13,7 @@
         /config self-explanitory 
 */
 
-const config = require('./config.json');
+let config = require('./config.json');
 const update = require('./local_modules')(config); 
 setInterval(update, config.updateInterval)
+delete config
