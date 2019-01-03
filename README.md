@@ -1,6 +1,8 @@
 # pi-weather
 Repo to easily modify front-end of raspberry-pi local weather visualization, forecast (eventually), *and* analytics server. Mathematical! (*maybe*)
 
+Preserve: `udo dhclient eth0 && sudo iptables -t nat -I PREROUTING -p tcp --dport 80 -j REDIRECT --to-port 8080`
+
 ## TO DO:
 - [ ] Center weather data in CLI browsers
 - [x] Make the data actually refresh somehow with magical object function passes
