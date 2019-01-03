@@ -1,6 +1,7 @@
 // const schedule = require('node-schedule');
 const exp = require('express');
 const app = exp()
+const path = require('path')
 var config = { server: {}, snapshot: {}, updateInterval: 300000 };
 var servables = {}
 
@@ -8,7 +9,12 @@ module.exports = function(Config) {
     for (var p of Object.keys(config)) config[p] = Config[p]
 
     servables = {
-        imageFileName: config.snapshot.fileName,
+        paths: {
+            image: {
+                original: path.resolve(config.server.assetDirectory + config.snapshot.fileName),
+                downscaled: path.resolve(config.server.assetDirectory + config.snapshot.downscaledName),
+            }
+        },
         updateInterval: config.updateInterval,
         graphs: {
             wind: require('fs').readFileSync(`${config.server.assetDirectory}AnenometerVaneTemplate.svg`).toString()
@@ -26,7 +32,11 @@ module.exports = function(Config) {
                 measurements: ["Initializing..."],
                 timestamp: Date.now()
             }
+        },
+        functions: {
+            update: function() { return new Promise() }
         }
+
     }
 
 
@@ -77,15 +87,25 @@ module.exports = function(Config) {
     app.set('views', config.server.viewDirectory).set('view engine', 'pug')
     app.use(exp.static(config.server.staticDirectory))
     app.get('/', (req, res) => { res.render('index', servables) })
+    app.get('/image', (req, res) => { res.sendFile(servables.paths.image.original) })
+    app.get('/snapshot', (req, res) => { res.sendFile(servables.paths.image.downscaled) })
     app.get('/weather', (req, res) => { res.jsonp(servables.weather.json) })
-    
-    app.get('/graph/*', (req, res) => { 
+
+    app.get('/graph/*', (req, res) => {
         console.log(req)
         res.render('graph', { graph: servables.graphs.wind })
     })
-    
+
     app.get('/history', (req, res) => { res.jsonp(servables.history) })
     app.get('/servables', (req, res) => { res.send(servables) })
+    app.get('/update', (req, res) => {
+        var promise = servables.functions.update()
+        console.log(promise)
+        promise.then(val => {
+            console.log("Updated!")
+            res.redirect("/")
+        }).catch(err => res.send("Unable to update: " + err))
+    })
 
     /* TO-DO: Services:
                         About page!
@@ -100,7 +120,10 @@ module.exports = function(Config) {
         //TO-DO: FOR THE LOVE OF GLOB FIND A WAY TO APPEND FUNCTIONS PASSED IN HERE TO SERVABLES
         //        for e.... if e.prototype??????
 
-        servables = Object.assign(servables, payload)
-            // console.log(servables)
+        for (var e of Object.keys(payload)) {
+            if (typeof payload[e] === "function") {
+                servables.functions[e] = payload[e];
+            } else servables[e] = payload[e]
+        }
     }
 }

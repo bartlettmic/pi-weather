@@ -22,10 +22,12 @@
     "jimp": "^0.2.28",
     "nedb": "^1.8.0",
     "node-raspistill": "0.0.14",
-    "node-schedule": "^1.2.4",
     "node-vibrant": "^3.0.0-alpha.2",
     "nodemon": "^1.12.0",
     "particle-api-js": "^6.5.0",
     "pug": "^0.1.0"
+  },
+  "potentialDependencies": {
+    "node-schedule": "^1.2.4"
   }
 }

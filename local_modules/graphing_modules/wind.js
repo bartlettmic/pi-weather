@@ -31,7 +31,7 @@ function LoadWindTemplate() {
                 vals = `"${vals[0]}":${vals[1]}`
                 return vals;
             }).join(",") + '}')
-            
+
             //Get the information about the template programmatically
             wind.center.x = parseFloat(words.cx)
             wind.center.y = parseFloat(words.cy)
@@ -43,44 +43,89 @@ function LoadWindTemplate() {
 
 function GenerateAnenometerVane(history) {
 
-    var graph = JSON.parse(JSON.stringify(wind.template));
 
     var maxspeed = Math.max.apply(Math, history.map(o => { return o.measurements.wind.speed }))
 
-    if (maxspeed < 1) {
-        var radius = wind.radius/2
-        var dr = 0.7071 * radius;
+    if (maxspeed < 1) return "<p>No recent wind gusts</p>"
 
-        var a = {
-            x: wind.center.x + dr,
-            y: wind.center.y + dr
-        }
-        var b = {
-            x: wind.center.x - dr,
-            y: wind.center.y - dr
-        }
-        graph.push(`<line stroke="#F00" x1="${a.x}" x2="${b.x}" y1="${b.y}" y2="${a.y}" />`)
-        graph.push(`<circle stroke="#F00" fill="none" cx="${wind.center.x}" cy="${wind.center.y}" r="${radius}"></circle>`)
-    } else
-        for (var i = 0; i < history.length; i++)
-            graph.push(
+    var graph = JSON.parse(JSON.stringify(wind.template));
+
+
+    // if (maxspeed < 1) {
+    // var radius = wind.radius/2
+    // var dr = 0.7071 * radius;
+
+    // var a = {
+    //     x: wind.center.x + dr,
+    //     y: wind.center.y + dr
+    // }
+    // var b = {
+    //     x: wind.center.x - dr,
+    //     y: wind.center.y - dr
+    // }
+    // graph.push(`<line stroke="#F00" x1="${a.x}" x2="${b.x}" y1="${b.y}" y2="${a.y}" />`)
+    // graph.push(`<circle stroke="#F00" fill="none" cx="${wind.center.x}" cy="${wind.center.y}" r="${radius}"></circle>`)
+    // } else
+
+
+    /*TO-DO: 
+     * Generate a better average arrow.
+     * Mouse event listeners to get actual values of that arrow (probably server module shit)   
+     */
+
+
+    var average = {
+        speed: 0,
+        direction: 0
+            // direction: {
+            //     "N": 0,
+            //     "NE": 0,
+            //     "E": 0,
+            //     "SE": 0,
+            //     "S": 0,
+            //     "SW": 0,
+            //     "W": 0,
+            //     "NW": 0
+            // }
+    }
+
+    for (var i = 0; i < history.length; i++) {
+        average.speed += history[i].measurements.wind.speed
+        average.direction += (getDirection(history[i].measurements.wind.direction)/8) 
+        // average.direction += 360 * (getDirection(history[i].measurements.wind.direction)/8) * (history[i].measurements.wind.speed / maxspeed) * (i / history.length)
+        graph.push(
                 GenerateArrowhead(
-                    history[i].measurements.wind.direction,
+                    getDirection(history[i].measurements.wind.direction),
                     history[i].measurements.wind.speed / maxspeed,
                     i / history.length
                 )
             )
             // graph.push(GenerateArrowhead(getDirection(parseInt(Math.random()*8)), history[i].measurements.wind.speed / maxspeed, i / history.length))
+    }
+    average.speed /= history.length
+
+    // delete average.direction["?"];
+
+    // Object.keys(obj).reduce(function(a, b){ return obj[a] > obj[b] ? a : b });
+
+    average.direction /= history.length
+    
+    average.direction*=Math.PI*2
+    
+    // average.direction += Math.PI;
+
+    console.log(average)
+
+    graph.push(GenerateArrowhead(average.direction, average.speed / maxspeed, 1, "rgba(255,64,0,0.75)"))
 
     graph = graph.join("")
     graph += "</svg>"
     return graph;
 }
 
-function GenerateArrowhead(direction, magnitude, recentness) {
-    magnitude = magnitude | 1
+function GenerateArrowhead(direction, magnitude, recentness, color) {
     var r = wind.radius * recentness
-    var a = Math.PI * (getDirection(direction) - 2) / 4
+    var a = Math.PI * (direction - 2) / 4
     var da = Math.PI / 35
 
     var angle = {
@@ -115,7 +160,7 @@ function GenerateArrowhead(direction, magnitude, recentness) {
 
     var d = `M${wings.left.x} ${wings.left.y} L${fuselage.tip.x} ${fuselage.tip.y} L${wings.right.x} ${wings.right.y} L${fuselage.butt.x} ${fuselage.butt.y} Z`
 
-    return `<path fill="rgba(255,255,255,${magnitude*recentness})" d="${d}" />`
+    return `<path stroke-width=${recentness*(magnitude)} fill=${color ? color : "none" } stroke="rgba(255,255,255,${recentness*magnitude})" d="${d}" />`
 }
 
 function getDirection(oct) {
@@ -139,7 +184,7 @@ function getDirection(oct) {
         default:
             return -1
     }
-    else switch (oct) {
+    else switch (oct % 8) {
         case 0:
             return "N"
         case 1:

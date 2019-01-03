@@ -1,0 +1,21 @@
+=============== Jan 7, 2018 (MST) ===============
+15:41:43.818310 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+15:41:43.818877 db@open opening
+15:41:43.821065 version@stat F·[] S·0B[] Sc·[]
+15:41:43.878967 db@janitor F·2 G·0
+15:41:43.879175 db@open done T·60.254166ms
+15:48:40.004825 db@close closing
+15:48:40.005023 db@close done T·189.581µs
+=============== Jan 7, 2018 (MST) ===============
+19:07:11.621600 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+19:07:12.403069 version@stat F·[] S·0B[] Sc·[]
+19:07:12.403220 db@open opening
+19:07:12.403742 journal@recovery F·1
+19:07:12.428300 journal@recovery recovering @1
+19:07:12.489038 memdb@flush created L0@2 N·12 S·1KiB "\x06job,v9":"\x18ex..job,v3"
+19:07:12.496309 version@stat F·[1] S·1KiB[1KiB] Sc·[0.25]
+19:07:12.497447 db@janitor F·3 G·0
+19:07:12.497552 db@open done T·94.274744ms
+=============== Jan 28, 2018 (MST) ===============
+18:19:31.414627 db@close closing
+18:19:31.415875 db@close done T·1.239372ms

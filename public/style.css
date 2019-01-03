@@ -19,15 +19,19 @@ body {
     height: 100%;
     overflow: hidden;
     background-size: cover;
+    background-image: url("/snapshot");
 }
 
 body:before {
+    --blur-amount: blur(6px);
+    --stretch: -1%;
     content: "";
     position: absolute;
     background: inherit;
     background-position: center;
     z-index: -1;
-    --stretch: -1%;
+    box-shadow: inset 0 0 100vw 100vw rgba(125, 125, 125,0.33);
+
     left: var(--stretch);
     right: var(--stretch);
     top: var(--stretch);
@@ -55,6 +59,7 @@ canvas {
     flex-grow: 0.75;
     width: 100%;
     height: 50%;
+    justify-content: space-around;
 }
 
 #graphs svg {
@@ -90,6 +95,7 @@ canvas {
 }
 
  .underlined {
+    
     width:100%;
     bottom:1px;
     top: 0.1em;
