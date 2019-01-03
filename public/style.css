@@ -32,7 +32,7 @@ body:before {
     right: var(--stretch);
     top: var(--stretch);
     bottom: var(--stretch);
-    --blur-amount: blur(8px);
+    --blur-amount: blur(7px);
     box-shadow: inset 0 0 100vw 100vw rgba(125, 125, 125,0.33);
     filter: var(--blur-amount);
     -moz-filter: var(--blur-amount);
@@ -54,6 +54,7 @@ canvas {
 #graphs {
     flex-grow: 0.75;
     width: 100%;
+    height: 50%;
 }
 
 #graphs svg {

@@ -38,7 +38,7 @@ module.exports = function(config) {
                 modules.database.insert(payload.json).then(history => {
                     modules.server(
                         {
-                            // history: history,
+                            history: history,
                             graphs: modules.drawGraphs(history)
                         }
                     )
